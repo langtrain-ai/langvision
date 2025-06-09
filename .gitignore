@@ -61,4 +61,12 @@ Pipfile.lock
 .vscode/
 
 # macOS
-.DS_Store 
+.DS_Store
+
+# Sensitive files
+.pypirc
+*.pem
+*.key
+.env
+.env.*
+.history/ 
