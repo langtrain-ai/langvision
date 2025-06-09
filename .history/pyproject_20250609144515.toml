@@ -23,13 +23,4 @@ classifiers = [
 "Bug Tracker" = "https://github.com/plim-ai/plim/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["plimai"]
-
-[tool.semantic_release]
-version_variable = ["pyproject.toml:version"]
-commit_message = "{version}\n\n{changelog}"
-branch = "main"
-upload_to_pypi = true
-upload_to_release = true
-changelog_sections = ["feature", "fix", "breaking"]
-commit_parser = "angular" 
+packages = ["plimai"] 
