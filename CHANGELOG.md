@@ -20,4 +20,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release of PlimAI package
 - Basic example module with hello function
 - GitHub Actions workflow for automatic publishing
-- Semantic versioning support 
+- Semantic versioning support
