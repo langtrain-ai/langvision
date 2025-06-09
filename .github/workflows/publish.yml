@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install build twine python-semantic-release
+          pip install build twine python-semantic-release changelog-generator
 
       - name: Configure Git
         run: |
@@ -34,8 +34,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          semantic-release version
-          semantic-release publish
+          semantic-release version -vv
+          semantic-release publish -vv
 
       - name: Build package
         run: python -m build
