@@ -34,8 +34,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          semantic-release version -vv
-          semantic-release publish -vv
+          semantic-release version
+          semantic-release publish
 
       - name: Build package
         run: python -m build
