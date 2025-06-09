@@ -1,6 +1,13 @@
 # PlimAI
 
-A Python package for building and deploying AI agents.
+A Python package for building and deploying AI agents. PlimAI is designed to streamline the creation, testing, and deployment of intelligent agents, providing tools and frameworks for various AI tasks.
+
+## Badges
+
+![PyPI - Version](https://img.shields.io/pypi/v/plimai)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/plimai)
+![Build Status](https://github.com/plimai/plim/workflows/Publish%20Python%20Package/badge.svg)
+![Code Coverage](https://img.shields.io/codecov/c/github/plimai/plim)
 
 ## Installation
 
@@ -14,8 +21,13 @@ pip install plimai
 
 ```python
 from plimai import example
+from plimai.example import get_version
 
-# Add usage examples here
+# Example usage of hello function
+print(example.hello("PlimAI User"))
+
+# Example usage of get_version function
+print(f"PlimAI Version: {get_version()}")
 ```
 
 ## Development
