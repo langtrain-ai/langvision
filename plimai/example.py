@@ -12,4 +12,14 @@ def hello(name: str = "World") -> str:
     Returns:
         str: Greeting message
     """
-    return f"Hello, {name}!" 
+    return f"Hello, {name}!"
+
+def get_version() -> str:
+    """
+    Get the current version of the package.
+    
+    Returns:
+        str: Current version number
+    """
+    from plimai import __version__
+    return __version__ 
