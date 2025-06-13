@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write  # Required for PyPI token
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -36,6 +36,12 @@ jobs:
           git config --global user.email "actions@github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
+      - name: Get current version
+        id: current-version
+        run: |
+          CURRENT_VERSION=$(python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
       - name: Run semantic-release
         id: release
         env:
@@ -44,25 +50,30 @@ jobs:
           semantic-release version
           semantic-release publish
 
+      - name: Get new version
+        id: new-version
+        run: |
+          NEW_VERSION=$(python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
       - name: Build package
+        if: steps.current-version.outputs.current_version != steps.new-version.outputs.new_version
         run: |
           rm -rf dist/ build/ *.egg-info/
           python -m build
 
       - name: Check package
+        if: steps.current-version.outputs.current_version != steps.new-version.outputs.new_version
         run: |
           twine check dist/*
 
       - name: Publish to PyPI
+        if: steps.current-version.outputs.current_version != steps.new-version.outputs.new_version
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          if [ -n "${{ steps.release.outputs.released }}" ]; then
-            python -m twine upload --verbose dist/*
-          else
-            echo "No new version to release"
-          fi
+          python -m twine upload --verbose dist/*
 
       - name: Handle failure
         if: failure()
