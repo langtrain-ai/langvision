@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write  # Required for PyPI token
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,6 +23,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
@@ -34,6 +37,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Run semantic-release
+        id: release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -41,10 +45,27 @@ jobs:
           semantic-release publish
 
       - name: Build package
-        run: python -m build
+        run: |
+          rm -rf dist/ build/ *.egg-info/
+          python -m build
+
+      - name: Check package
+        run: |
+          twine check dist/*
 
       - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: python -m twine upload dist/* 
+        run: |
+          if [ -n "${{ steps.release.outputs.released }}" ]; then
+            python -m twine upload --verbose dist/*
+          else
+            echo "No new version to release"
+          fi
+
+      - name: Handle failure
+        if: failure()
+        run: |
+          echo "::error::Failed to publish package to PyPI"
+          exit 1 
