@@ -3,7 +3,6 @@
 [![PyPI version](https://img.shields.io/pypi/v/plimai.svg)](https://pypi.org/project/plimai/)
 [![Downloads](https://pepy.tech/badge/plimai)](https://pepy.tech/project/plimai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 
 ---
 
