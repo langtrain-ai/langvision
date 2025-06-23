@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "plimai"
-version = "0.1.0"
+version = "0.1.4"
 authors = [
     { name = "Plim", email = "priteshraj41@gmail.com" },
 ]
@@ -27,7 +27,7 @@ Homepage = "https://github.com/plim-ai/plim"
 "Bug Tracker" = "https://github.com/plim-ai/plim/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["plimai"]
+packages = ["src/plimai"]
 
 [tool.semantic_release]
 version_variable = ["pyproject.toml:version"]
