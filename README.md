@@ -1,72 +1,60 @@
-# PlimAI
+# plimai: Vision LLMs with LoRA Fine-Tuning
 
-A Python package for building and deploying AI agents. PlimAI is designed to streamline the creation, testing, and deployment of intelligent agents, providing tools and frameworks for various AI tasks.
+A modular framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support.
 
-## Badges
-
-![PyPI - Version](https://img.shields.io/pypi/v/plimai)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/plimai)
-![Build Status](https://github.com/plimai/plim/workflows/Publish%20Python%20Package/badge.svg)
-![Code Coverage](https://img.shields.io/codecov/c/github/plimai/plim)
+## Features
+- Modular Vision Transformer backbone
+- LoRA for efficient fine-tuning on limited compute
+- Easily extensible for new components and tasks
+- Example and tests included
 
 ## Installation
-
-You can install the package using pip:
-
-```bash
-pip install plimai
+```
+pip install torch torchvision
 ```
 
-## Usage
-
+## Usage Example
 ```python
-from plimai import example
-from plimai.example import get_version
+import torch
+from plimai.models.vision_transformer import VisionTransformer
+from plimai.utils.config import default_config
 
-# Example usage of hello function
-print(example.hello("PlimAI User"))
-
-# Example usage of get_version function
-print(f"PlimAI Version: {get_version()}")
+x = torch.randn(2, 3, 224, 224)
+model = VisionTransformer(
+    img_size=default_config['img_size'],
+    patch_size=default_config['patch_size'],
+    in_chans=default_config['in_chans'],
+    num_classes=default_config['num_classes'],
+    embed_dim=default_config['embed_dim'],
+    depth=default_config['depth'],
+    num_heads=default_config['num_heads'],
+    mlp_ratio=default_config['mlp_ratio'],
+    lora_config=default_config['lora'],
+)
+out = model(x)
+print('Output shape:', out.shape)
 ```
 
-## Development
+## Running Tests
+```
+pytest tests/
+```
 
-### Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/plim-ai/plim.git
-   cd plim
-   ```
-
-2. Install development dependencies:
-   ```bash
-   pip install -e ".[dev]"
-   ```
-
-### Version Control
-
-This project uses semantic versioning and automatic version bumping:
-
-- `feat:` commits trigger a minor version bump
-- `fix:` commits trigger a patch version bump
-- `feat!:` or `BREAKING CHANGE:` commits trigger a major version bump
-
-### CI/CD
-
-The project uses GitHub Actions for continuous integration and deployment:
-
-1. On every push to main:
-   - Version is automatically bumped based on commit messages
-   - Package is built and published to PyPI
-   - GitHub release is created
-
-2. To trigger a new release:
-   - Make your changes
-   - Commit with a semantic commit message (e.g., `feat: add new feature`)
-   - Push to main
+## Directory Structure
+```
+plimai/
+  models/
+    vision_transformer.py
+    lora.py
+  components/
+    patch_embedding.py
+    attention.py
+    mlp.py
+  utils/
+    data.py
+    config.py
+  example.py
+```
 
 ## License
-
-This project is licensed under the MIT License - see the LICENSE file for details. 
+MIT 
