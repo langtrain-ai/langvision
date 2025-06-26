@@ -103,7 +103,7 @@ print('Output shape:', out.shape)
 
 ## 🧪 Running Tests
 
-```bash
+   ```bash
 pytest tests/
 ```
 

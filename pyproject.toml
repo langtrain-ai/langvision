@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "plimai"
-version = "0.1.5"
+version = "0.1.5.2"
 authors = [
     { name = "Plim", email = "priteshraj41@gmail.com" },
 ]
@@ -23,8 +23,13 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/plim-ai/plim"
-"Bug Tracker" = "https://github.com/plim-ai/plim/issues"
+Documentation = "https://github.com/plimai/plim/tree/main/docs"
+Download = "https://pypi.org/project/plimai/#files"
+Homepage = "https://github.com/plimai/plim"
+"Release Notes" = "https://github.com/plimai/plim/releases"
+Source = "https://github.com/plimai/plim"
+Tracker = "https://github.com/plimai/plim/issues"
+Funding = "https://github.com/sponsors/plimai"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/plimai"]
