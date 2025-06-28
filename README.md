@@ -4,14 +4,10 @@
 [![Downloads](https://pepy.tech/badge/plimai)](https://pepy.tech/project/plimai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-<!-- Light theme -->
-<p align="center">
-  <img src="static/plimai-white.png" alt="Plimai Logo" width="400"/>
-</p>
 
 <!-- Dark theme -->
 <p align="center" style="background:#222;">
-  <img src="static/plimai-use-dark.png" alt="Plimai Logo" width="400"/>
+  <img src="static/plimai-use-dark.png" alt="Plimai Logo" height="full" width="full"/>
 </p>
 
 ---
