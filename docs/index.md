@@ -1,9 +1,9 @@
-# Plimai Documentation
+# plimai Documentation
 
-Welcome to the Plimai documentation!
+Welcome to the plimai documentation!
 
 ## Overview
-Plimai is a modular framework for Vision LLMs with LoRA fine-tuning and a unified model zoo for open-source visual models.
+plimai is a modular framework for Vision LLMs with LoRA fine-tuning and a unified model zoo for open-source visual models.
 
 ## Contents
 - [Getting Started](../README.md)

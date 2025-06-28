@@ -1,4 +1,4 @@
-# Contributing to Plimai
+# Contributing to plimai
 
 Thank you for your interest in contributing! 🚀
 

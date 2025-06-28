@@ -1,23 +1,23 @@
-# Plimai: Vision LLMs with Efficient LoRA Fine-Tuning
+# plimai: Vision LLMs with Efficient LoRA Fine-Tuning
 
-[![PyPI version](https://img.shields.io/pypi/v/Plimai.svg)](https://pypi.org/project/Plimai/)
-[![Downloads](https://pepy.tech/badge/Plimai)](https://pepy.tech/project/Plimai)
+[![PyPI version](https://img.shields.io/pypi/v/plimai.svg)](https://pypi.org/project/plimai/)
+[![Downloads](https://pepy.tech/badge/plimai)](https://pepy.tech/project/plimai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-**Plimai** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. It is designed for:
+**plimai** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. It is designed for:
 - Researchers exploring new vision transformer architectures or fine-tuning strategies
 - Practitioners who want to adapt large vision models to custom datasets with limited compute
 - Developers looking for a clean, extensible codebase for vision-language AI
 
-Plimai provides a plug-and-play interface for LoRA, making it easy to experiment with parameter-efficient fine-tuning. The codebase is modular, so you can swap out or extend components like patch embedding, attention, or MLP heads.
+plimai provides a plug-and-play interface for LoRA, making it easy to experiment with parameter-efficient fine-tuning. The codebase is modular, so you can swap out or extend components like patch embedding, attention, or MLP heads.
 
 ---
 
 ## 🏗️ Architecture Overview
 
-Plimai is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters injected into attention and MLP layers for efficient fine-tuning. The main components are:
+plimai is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters injected into attention and MLP layers for efficient fine-tuning. The main components are:
 
 ```mermaid
 graph TD
@@ -44,7 +44,7 @@ graph TD
 ## 📦 Installation
 
 ```bash
-pip install Plimai
+pip install plimai
 ```
 Or, for the latest version from source:
 ```bash
@@ -59,8 +59,8 @@ pip install .
 
 ```python
 import torch
-from Plimai.models.vision_transformer import VisionTransformer
-from Plimai.utils.config import default_config
+from plimai.models.vision_transformer import VisionTransformer
+from plimai.utils.config import default_config
 
 # Dummy image batch: batch_size=2, channels=3, height=224, width=224
 x = torch.randn(2, 3, 224, 224)
@@ -131,7 +131,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Directory Structure
 ```
-Plimai/
+plimai/
   models/
     vision_transformer.py
     lora.py

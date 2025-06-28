@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial release of Plimai package
+- Initial release of plimai package
 - Basic example module with hello function
 - GitHub Actions workflow for automatic publishing
 - Semantic versioning support
