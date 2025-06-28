@@ -3,4 +3,4 @@ version= +1
 
 rm -rf dist/
 python -m build
-twine upload -u __token__ -p pypi- <token> dist/*
+twine upload -u __token__ -p pypi-<token> dist/*
