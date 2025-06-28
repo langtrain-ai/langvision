@@ -28,7 +28,7 @@ plimai is built around a modular Vision Transformer (ViT) backbone, with LoRA ad
 ```mermaid
 graph TD
     A[Input Image] --> B[Patch Embedding]
-    B --> C[+CLS Token & Positional Encoding]
+    B --> C[CLS Token & Positional Encoding]
     C --> D[Transformer Encoder]
     D --> E[LayerNorm]
     E --> F[MLP Head]
