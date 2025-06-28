@@ -19,6 +19,18 @@
 
 ---
 
+## 🚀 Showcase
+
+**plimai** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support.
+
+- Plug-and-play LoRA adapters for parameter-efficient fine-tuning
+- Modular Vision Transformer (ViT) backbone
+- Unified model zoo for open-source visual models
+- Easy configuration and extensible codebase
+- Ready for research and production
+
+---
+
 ## ✨ Features
 
 - **Plug-and-play LoRA adapters** for parameter-efficient fine-tuning
@@ -78,28 +90,44 @@ python src/plimai/finetune_vit_lora.py --dataset cifar10 --epochs 10 --batch_siz
 
 ## 🏗️ Architecture Overview
 
-plimai is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters injected into attention and MLP layers for efficient fine-tuning. The main components are:
+plimai is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters injected into attention and MLP layers for efficient fine-tuning.
+
+Below is a high-level data flow of the model:
 
 ```mermaid
 graph TD
     A([Input Image]) --> B([Patch Embedding])
     B --> C([+CLS Token & Positional Encoding])
-    C --> D([Transformer Encoder])
-    D --> E([LayerNorm])
+    C --> D1[Encoder Layer 1]
+    D1 --> D2[Encoder Layer 2]
+    D2 --> D3[Encoder Layer N]
+    D3 --> E([LayerNorm])
     E --> F([MLP Head])
-    F --> G([Output<br/>(Class logits)])
+    F --> G([Output (Class logits)])
 
     %% LoRA Adapters as a subgraph inside Transformer Encoder
-    subgraph LoRA_Adapters["LoRA Adapters (in Attention & MLP)"]
-        LA1[ ]
+    subgraph LoRA_Adapters["LoRA Adapters"]
+        LA1[LoRA Adapter 1]
+        LA2[LoRA Adapter 2]
+        LA3[LoRA Adapter N]
     end
-    LA1 -.-> D
-
-    style LoRA_Adapters fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#e0f7fa,stroke:#00796b,stroke-width:2px
-    style F fill:#fffde7,stroke:#fbc02d,stroke-width:2px
-    style G fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    LA1 -.-> D1
+    LA2 -.-> D2
+    LA3 -.-> D3
 ```
+
+**Legend:**
+- Dashed arrows from LoRA Adapters indicate injection points in the encoder layers.
+- Each encoder layer can have its own LoRA adapter for parameter-efficient adaptation.
+
+**Data Flow Steps:**
+1. **Input Image**: The raw image is split into patches.
+2. **Patch Embedding**: Each patch is projected into an embedding space.
+3. **+CLS Token & Positional Encoding**: A classification token is prepended and positional information is added.
+4. **Transformer Encoder (Stack of Layers)**: The core of the model, where self-attention and MLP blocks operate. LoRA adapters are injected here for efficient fine-tuning.
+5. **LayerNorm**: Normalizes the output of the encoder stack.
+6. **MLP Head**: Final head for classification or regression.
+7. **Output**: Model predictions (e.g., class logits).
 
 ### Main Modules
 - **PatchEmbedding**: Splits the image into patches and projects them into embedding space.
