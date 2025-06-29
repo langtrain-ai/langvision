@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
-from plimai.components.patch_embedding import PatchEmbedding
-from plimai.components.attention import TransformerEncoder
-from plimai.components.mlp import MLPHead
+from .lora import LoRALinear
+from ..components.patch_embedding import PatchEmbedding
+from ..components.attention import TransformerEncoder
+from ..components.mlp import MLPHead
 
 class VisionTransformer(nn.Module):
     def __init__(self, img_size=224, patch_size=16, in_chans=3, num_classes=1000, embed_dim=768, depth=12, num_heads=12, mlp_ratio=4.0, lora_config=None):

@@ -45,6 +45,13 @@
 - 🚀 **Production ready** with comprehensive testing and documentation
 - 💾 **Memory efficient** training with gradient checkpointing support
 - 📊 **Built-in metrics** and visualization tools
+- 🧩 **Modular training loop** with LoRA support
+- 🎯 **Unified CLI** for fine-tuning and evaluation
+- 🔌 **Extensible callbacks** (early stopping, logging, etc.)
+- 📦 **Checkpointing and resume**
+- 🚀 **Mixed precision training**
+- 🔧 **Easy dataset and model extension**
+- ⚡ **Ready for distributed/multi-GPU training**
 
 ---
 
@@ -107,19 +114,7 @@ print(f'Trainable parameters: {trainable_params:,}')
 
 ```bash
 # Fine-tune on CIFAR-10
-python src/plimai/finetune_vit_lora.py \
-    --dataset cifar10 \
-    --epochs 10 \
-    --batch_size 64 \
-    --lora_rank 16 \
-    --learning_rate 1e-4
-
-# Fine-tune on custom dataset
-python src/plimai/finetune_vit_lora.py \
-    --dataset_path /path/to/your/dataset \
-    --num_classes 100 \
-    --epochs 20 \
-    --output_dir ./checkpoints
+python -m src.plimai.cli.finetune --dataset cifar10 --epochs 20 --lora_r 8 --early_stopping
 ```
 
 ---
@@ -466,3 +461,33 @@ model.save_pretrained("path/to/merged/model")
   <b>Made with ❤️ by the plimai team</b><br/>
   <i>Star ⭐ this repo if you find it useful!</i>
 </p>
+
+## 🧩 Extending the Framework
+- Add new datasets in `src/plimai/data/datasets.py`
+- Add new callbacks in `src/plimai/callbacks/`
+- Add new models in `src/plimai/models/`
+- Add new CLI tools in `src/plimai/cli/`
+
+## 🔌 Callbacks & Logging
+- Early stopping: `src/plimai/callbacks/early_stopping.py`
+- Add your own callbacks for logging, custom metrics, or notifications.
+- For advanced logging (TensorBoard, Weights & Biases), add a callback and pass it to the `Trainer`.
+
+## ⚡ Distributed & Multi-GPU Training
+- The `Trainer` is designed to be compatible with PyTorch DDP and multi-GPU setups.
+- To enable distributed training, wrap your model and dataloaders with PyTorch's `DistributedDataParallel` and use `torch.distributed.launch` or `torchrun`.
+- Example (multi-GPU):
+```bash
+python -m torch.distributed.launch --nproc_per_node=4 src/plimai/cli/finetune.py --dataset cifar10 --epochs 20
+```
+- For more details, see the [PyTorch DDP documentation](https://pytorch.org/docs/stable/notes/ddp.html).
+
+## 📖 Documentation
+- See code comments and docstrings for details on each module.
+- For advanced usage, see the `src/plimai/cli/finetune.py` script.
+
+## 🤝 Contributing
+Pull requests and issues are welcome! See `CONTRIBUTING.md` for guidelines.
+
+## 📜 License
+MIT
