@@ -4,7 +4,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="static/plimai-use-dark.png">
-    <img src="static/plimai-white.png" alt="Plimai Logo" width="420"/>
+    <img src="static/plimai-white.png" alt="Plimai Logo" width="full"/>
   </picture>
 </p>
 
