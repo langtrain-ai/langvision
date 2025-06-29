@@ -131,32 +131,31 @@ plimai is built around a modular Vision Transformer (ViT) backbone, with LoRA ad
 ### Model Data Flow
 
 ```mermaid
+---
+config:
+  layout: dagre
+---
 flowchart TD
-    %% Main ViT Flow
-    A([Input Image]) --> B([Patch Embedding])
-    B --> C([CLS Token & Positional Encoding])
-    C --> D1([Encoder Layer 1])
-    D1 --> D2([Encoder Layer 2])
-    D2 --> D3([Encoder Layer N])
-    D3 --> E([LayerNorm])
-    E --> F([MLP Head])
-    F --> G([Output Class Logits])
-    
-    %% LoRA Adapters as a subgraph
-    subgraph LoRA_Adapters["LoRA Adapters in Attention and MLP"]
-        LA1([LoRA Adapter 1])
-        LA2([LoRA Adapter 2])
-        LA3([LoRA Adapter N])
-    end
-    
-    %% Connect LoRA adapters to encoder layers
+ subgraph LoRA_Adapters["LoRA Adapters in Attention and MLP"]
+        LA1(["LoRA Adapter 1"])
+        LA2(["LoRA Adapter 2"])
+        LA3(["LoRA Adapter N"])
+  end
+    A(["Input Image"]) --> B(["Patch Embedding"])
+    B --> C(["CLS Token & Positional Encoding"])
+    C --> D1(["Encoder Layer 1"])
+    D1 --> D2(["Encoder Layer 2"])
+    D2 --> D3(["Encoder Layer N"])
+    D3 --> E(["LayerNorm"])
+    E --> F(["MLP Head"])
+    F --> G(["Output Class Logits"])
     LA1 -.-> D1
     LA2 -.-> D2
     LA3 -.-> D3
-    
-    %% Styling
+     LA1:::loraStyle
+     LA2:::loraStyle
+     LA3:::loraStyle
     classDef loraStyle fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
-    class LA1,LA2,LA3 loraStyle
 ```
 
 ### Architecture Components
@@ -460,43 +459,6 @@ model.merge_lora_weights()
 model.save_pretrained("path/to/merged/model")
 ```
 </details>
-
----
-
-## 🗂️ Project Structure
-
-```
-plimai/
-├── src/plimai/
-│   ├── models/
-│   │   ├── vision_transformer.py    # Main ViT implementation
-│   │   ├── lora.py                  # LoRA adapter classes
-│   │   └── heads.py                 # Classification/regression heads
-│   ├── components/
-│   │   ├── patch_embedding.py       # Patch embedding layer
-│   │   ├── attention.py             # Multi-head attention
-│   │   ├── mlp.py                   # MLP blocks
-│   │   └── encoders.py              # Transformer encoders
-│   ├── datasets/
-│   │   ├── base.py                  # Base dataset class
-│   │   ├── vision.py                # Vision dataset utilities
-│   │   └── transforms.py            # Data augmentation
-│   ├── utils/
-│   │   ├── config.py                # Configuration management
-│   │   ├── training.py              # Training utilities
-│   │   ├── metrics.py               # Evaluation metrics
-│   │   └── visualization.py         # Plotting and visualization
-│   ├── cli/
-│   │   ├── train.py                 # Training CLI
-│   │   ├── evaluate.py              # Evaluation CLI
-│   │   └── export.py                # Model export utilities
-│   └── finetune_vit_lora.py        # Main fine-tuning script
-├── tests/                           # Comprehensive test suite
-├── docs/                            # Documentation
-├── examples/                        # Example scripts and notebooks
-├── configs/                         # Configuration files
-└── scripts/                         # Utility scripts
-```
 
 ---
 
