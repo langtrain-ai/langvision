@@ -383,11 +383,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you use plimai in your research, please cite:
 
 ```bibtex
-@software{plimai2024,
+@software{plimai2025,
   author = {Pritesh Raj},
   title = {plimai: Vision LLMs with Efficient LoRA Fine-Tuning},
   url = {https://github.com/plim-ai/plim},
-  year = {2024},
+  year = {2025},
   version = {1.0.0}
 }
 ```
