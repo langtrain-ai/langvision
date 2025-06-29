@@ -457,30 +457,62 @@ model.save_pretrained("path/to/merged/model")
 
 ---
 
-<p align="center">
-  <b>Made with ❤️ by the plimai team</b><br/>
-  <i>Star ⭐ this repo if you find it useful!</i>
-</p>
+## ⚡ Advanced CUDA & Distributed Training
+
+plimai provides advanced CUDA and distributed training options for maximum performance and reproducibility.
+
+### CUDA Options
+
+You can control CUDA behavior directly from the CLI:
+
+- `--cuda_deterministic`: Enable deterministic CUDA for full reproducibility (slower, but results are repeatable)
+- `--cuda_benchmark`: Enable cudnn.benchmark for fastest training (default: True)
+- `--cuda_max_split_size_mb`: Set CUDA max split size in MB (for large models, PyTorch >=1.10)
+
+**Example:**
+```bash
+# Fastest training (default)
+python -m src.plimai.cli.finetune --dataset cifar10 --epochs 20
+
+# Fully reproducible (deterministic)
+python -m src.plimai.cli.finetune --dataset cifar10 --epochs 20 --cuda_deterministic
+
+# Large model memory tuning
+python -m src.plimai.cli.finetune --dataset cifar10 --epochs 20 --cuda_max_split_size_mb 512
+```
+
+### Distributed & Multi-GPU Training
+
+plimai is compatible with PyTorch DDP and multi-GPU setups. To enable distributed training:
+
+- Use `torch.distributed.launch` or `torchrun` to launch multiple processes (one per GPU):
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=4 src/plimai/cli/finetune.py --dataset cifar10 --epochs 20
+```
+
+- For more details, see the [PyTorch DDP documentation](https://pytorch.org/docs/stable/notes/ddp.html).
+
+### Troubleshooting CUDA
+- If you get CUDA out of memory errors, try reducing batch size, enabling gradient checkpointing, or tuning CUDA split size.
+- For full reproducibility, use `--cuda_deterministic` (note: this may reduce performance).
+
+---
+
+## 🔌 Callbacks & Logging
+- Modular callback system: add your own callbacks for logging, custom metrics, notifications, etc.
+- Built-in callbacks: early stopping (`src/plimai/callbacks/early_stopping.py`), logging, and more.
+- All training logs use Python's `logging` module for flexible output (console, file, or external tools).
+- For advanced logging (TensorBoard, Weights & Biases), add a callback and pass it to the `Trainer`.
+
+---
+
 
 ## 🧩 Extending the Framework
 - Add new datasets in `src/plimai/data/datasets.py`
 - Add new callbacks in `src/plimai/callbacks/`
 - Add new models in `src/plimai/models/`
 - Add new CLI tools in `src/plimai/cli/`
-
-## 🔌 Callbacks & Logging
-- Early stopping: `src/plimai/callbacks/early_stopping.py`
-- Add your own callbacks for logging, custom metrics, or notifications.
-- For advanced logging (TensorBoard, Weights & Biases), add a callback and pass it to the `Trainer`.
-
-## ⚡ Distributed & Multi-GPU Training
-- The `Trainer` is designed to be compatible with PyTorch DDP and multi-GPU setups.
-- To enable distributed training, wrap your model and dataloaders with PyTorch's `DistributedDataParallel` and use `torch.distributed.launch` or `torchrun`.
-- Example (multi-GPU):
-```bash
-python -m torch.distributed.launch --nproc_per_node=4 src/plimai/cli/finetune.py --dataset cifar10 --epochs 20
-```
-- For more details, see the [PyTorch DDP documentation](https://pytorch.org/docs/stable/notes/ddp.html).
 
 ## 📖 Documentation
 - See code comments and docstrings for details on each module.
@@ -491,3 +523,8 @@ Pull requests and issues are welcome! See `CONTRIBUTING.md` for guidelines.
 
 ## 📜 License
 MIT
+
+<p align="center">
+  <b>Made in India 🇮🇳 with ❤️ by the plimai</b><br/>
+  <i>Star ⭐ this repo if you find it useful!</i>
+</p>
