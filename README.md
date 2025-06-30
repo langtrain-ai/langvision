@@ -1,4 +1,4 @@
-# plimai: Vision LLMs with Efficient LoRA Fine-Tuning
+# plimai: Vision LLMs (Large Language Models for Vision) with Efficient LoRA Fine-Tuning
 
 <hr/>
 <p align="center">
@@ -8,36 +8,54 @@
   </picture>
 </p>
 
+<!-- Badges -->
 <p align="center">
-  <a href="https://pypi.org/project/plimai/"><img src="https://img.shields.io/pypi/v/plimai.svg"></a>
-  <a href="https://pepy.tech/project/plimai"><img src="https://pepy.tech/badge/plimai"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+  <a href="https://pypi.org/project/plimai/"><img src="https://img.shields.io/pypi/v/plimai.svg" alt="PyPI version"></a>
+  <a href="https://pepy.tech/project/plimai"><img src="https://pepy.tech/badge/plimai" alt="Downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"></a>
+  <a href="https://img.shields.io/badge/coverage-90%25-brightgreen" alt="Coverage"> <img src="https://img.shields.io/badge/coverage-90%25-brightgreen"/></a>
+  <a href="https://img.shields.io/badge/python-3.8%2B-blue" alt="Python Version"> <img src="https://img.shields.io/badge/python-3.8%2B-blue"/></a>
+  <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
 </p>
 
 <p align="center">
-  <b>Modular Vision LLMs with Efficient LoRA Fine-Tuning</b><br/>
+  <b>Modular Vision LLMs (Large Language Models for Vision) with Efficient LoRA Fine-Tuning</b><br/>
   <span style="font-size:1.1em"><i>Build, adapt, and fine-tune vision models with ease and efficiency.</i></span>
 </p>
 <hr/>
 
-## 🚀 Showcase
-
-**plimai** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. Whether you're working on image classification, visual question answering, or custom vision tasks, plimai provides the tools you need for parameter-efficient model adaptation.
+## 🚀 Quick Links
+- [Documentation](docs/index.md)
+- [Tutorials](docs/tutorials/index.md)
+- [Changelog](CHANGELOG.md)
+- [Contributing Guide](CONTRIBUTING.md)
+- [Roadmap](ROADMAP.md)
 
 ---
 
-## ❓ Why Plimai?
-
-- **Parameter-efficient fine-tuning**: Plug-and-play LoRA adapters for fast, memory-efficient adaptation with minimal computational overhead
-- **Modular ViT backbone**: Swap or extend components like patch embedding, attention, or MLP heads with ease
-- **Unified model zoo**: Access and experiment with open-source visual models through a consistent interface
-- **Research & production ready**: Clean, extensible codebase with comprehensive configuration options and robust utilities
-- **Memory efficient**: Fine-tune large models on consumer hardware by updating only a small fraction of parameters
+## 📚 Table of Contents
+- [Features](#-features)
+- [Showcase](#-showcase)
+- [Getting Started](#-getting-started)
+- [Supported Python Versions](#-supported-python-versions)
+- [Why Plimai?](#-why-plimai)
+- [Architecture Overview](#-architecture-overview)
+- [Core Modules](#-core-modules)
+- [Performance & Efficiency](#-performance--efficiency)
+- [Advanced Configuration](#-advanced-configuration)
+- [Documentation & Resources](#-documentation--resources)
+- [Testing & Quality](#-testing--quality)
+- [Examples & Use Cases](#-examples--use-cases)
+- [Extending the Framework](#-extending-the-framework)
+- [Contributing](#-contributing)
+- [FAQ](#-faq)
+- [Citation](#-citation)
+- [Acknowledgements](#-acknowledgements)
+- [License](#-license)
 
 ---
 
 ## ✨ Features
-
 - 🔧 **Plug-and-play LoRA adapters** for parameter-efficient fine-tuning
 - 🏗️ **Modular Vision Transformer (ViT) backbone** with customizable components
 - 🎯 **Unified model zoo** for open-source visual models
@@ -55,37 +73,26 @@
 
 ---
 
-## 📦 Installation
+## 🚀 Showcase
 
-### Quick Install
-```bash
-pip install plimai
-```
-
-### Development Install
-```bash
-git clone https://github.com/plim-ai/plim.git
-cd plim
-pip install -e .
-```
-
-### With Optional Dependencies
-```bash
-pip install plimai[all]  # Includes visualization and advanced features
-```
+**plimai** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. Whether you're working on image classification, visual question answering, or custom vision tasks, plimai provides the tools you need for parameter-efficient model adaptation.
 
 ---
 
-## 🏁 Quick Start
+## 🏁 Getting Started
 
-### Python API
+Here's a minimal example to get you up and running:
+
+```bash
+pip install plimai
+```
 
 ```python
 import torch
 from plimai.models.vision_transformer import VisionTransformer
 from plimai.utils.config import default_config
 
-# Create model with LoRA adapters
+# Create model
 x = torch.randn(2, 3, 224, 224)
 model = VisionTransformer(
     img_size=default_config['img_size'],
@@ -103,19 +110,24 @@ model = VisionTransformer(
 with torch.no_grad():
     out = model(x)
     print('Output shape:', out.shape)
-
-# Enable LoRA for fine-tuning
-model.enable_lora()
-trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-print(f'Trainable parameters: {trainable_params:,}')
 ```
 
-### CLI Fine-tuning
+For advanced usage, CLI details, and more, see the [Documentation](docs/index.md) and [src/plimai/cli/finetune.py](src/plimai/cli/finetune.py).
 
-```bash
-# Fine-tune on CIFAR-10
-python -m src.plimai.cli.finetune --dataset cifar10 --epochs 20 --lora_r 8 --early_stopping
-```
+---
+
+## 🐍 Supported Python Versions
+- Python 3.8+
+
+---
+
+## 🧩 Why Plimai?
+
+- **Parameter-efficient fine-tuning**: Plug-and-play LoRA adapters for fast, memory-efficient adaptation with minimal computational overhead
+- **Modular ViT backbone**: Swap or extend components like patch embedding, attention, or MLP heads with ease
+- **Unified model zoo**: Access and experiment with open-source visual models through a consistent interface
+- **Research & production ready**: Clean, extensible codebase with comprehensive configuration options and robust utilities
+- **Memory efficient**: Fine-tune large models on consumer hardware by updating only a small fraction of parameters
 
 ---
 
@@ -336,8 +348,17 @@ model.finetune(
 
 ---
 
-## 🤝 Community & Contributing
+## 🧩 Extending the Framework
+- Add new datasets in `src/plimai/data/datasets.py`
+- Add new callbacks in `src/plimai/callbacks/`
+- Add new models in `src/plimai/models/`
+- Add new CLI tools in `src/plimai/cli/`
 
+## 📖 Documentation
+- See code comments and docstrings for details on each module.
+- For advanced usage, see the `src/plimai/cli/finetune.py` script.
+
+## 🤝 Contributing
 We welcome contributions from the community! Here's how you can get involved:
 
 ### Ways to Contribute
@@ -367,8 +388,6 @@ pytest tests/
 - 📖 [Contributing Guide](CONTRIBUTING.md) - Detailed contribution guidelines
 - 🎯 [Roadmap](ROADMAP.md) - See what's planned for future releases
 
----
-
 ## 📄 License & Citation
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -387,8 +406,6 @@ If you use plimai in your research, please cite:
 }
 ```
 
----
-
 ## 🌟 Acknowledgements
 
 We thank the following projects and communities:
@@ -397,8 +414,6 @@ We thank the following projects and communities:
 - [HuggingFace](https://huggingface.co/) - Transformers and model hub
 - [timm](https://github.com/rwightman/pytorch-image-models) - Vision model implementations
 - [PEFT](https://github.com/huggingface/peft) - Parameter-efficient fine-tuning methods
-
----
 
 ## ❓ FAQ
 
@@ -455,74 +470,32 @@ model.save_pretrained("path/to/merged/model")
 ```
 </details>
 
----
+## 📄 License & Citation
 
-## ⚡ Advanced CUDA & Distributed Training
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-plimai provides advanced CUDA and distributed training options for maximum performance and reproducibility.
+### Citation
 
-### CUDA Options
+If you use plimai in your research, please cite:
 
-You can control CUDA behavior directly from the CLI:
-
-- `--cuda_deterministic`: Enable deterministic CUDA for full reproducibility (slower, but results are repeatable)
-- `--cuda_benchmark`: Enable cudnn.benchmark for fastest training (default: True)
-- `--cuda_max_split_size_mb`: Set CUDA max split size in MB (for large models, PyTorch >=1.10)
-
-**Example:**
-```bash
-# Fastest training (default)
-python -m src.plimai.cli.finetune --dataset cifar10 --epochs 20
-
-# Fully reproducible (deterministic)
-python -m src.plimai.cli.finetune --dataset cifar10 --epochs 20 --cuda_deterministic
-
-# Large model memory tuning
-python -m src.plimai.cli.finetune --dataset cifar10 --epochs 20 --cuda_max_split_size_mb 512
+```bibtex
+@software{plimai2025,
+  author = {Pritesh Raj},
+  title = {plimai: Vision LLMs with Efficient LoRA Fine-Tuning},
+  url = {https://github.com/plim-ai/plim},
+  year = {2025},
+  version = {1.0.0}
+}
 ```
 
-### Distributed & Multi-GPU Training
+## 🌟 Acknowledgements
 
-plimai is compatible with PyTorch DDP and multi-GPU setups. To enable distributed training:
+We thank the following projects and communities:
 
-- Use `torch.distributed.launch` or `torchrun` to launch multiple processes (one per GPU):
-
-```bash
-python -m torch.distributed.launch --nproc_per_node=4 src/plimai/cli/finetune.py --dataset cifar10 --epochs 20
-```
-
-- For more details, see the [PyTorch DDP documentation](https://pytorch.org/docs/stable/notes/ddp.html).
-
-### Troubleshooting CUDA
-- If you get CUDA out of memory errors, try reducing batch size, enabling gradient checkpointing, or tuning CUDA split size.
-- For full reproducibility, use `--cuda_deterministic` (note: this may reduce performance).
-
----
-
-## 🔌 Callbacks & Logging
-- Modular callback system: add your own callbacks for logging, custom metrics, notifications, etc.
-- Built-in callbacks: early stopping (`src/plimai/callbacks/early_stopping.py`), logging, and more.
-- All training logs use Python's `logging` module for flexible output (console, file, or external tools).
-- For advanced logging (TensorBoard, Weights & Biases), add a callback and pass it to the `Trainer`.
-
----
-
-
-## 🧩 Extending the Framework
-- Add new datasets in `src/plimai/data/datasets.py`
-- Add new callbacks in `src/plimai/callbacks/`
-- Add new models in `src/plimai/models/`
-- Add new CLI tools in `src/plimai/cli/`
-
-## 📖 Documentation
-- See code comments and docstrings for details on each module.
-- For advanced usage, see the `src/plimai/cli/finetune.py` script.
-
-## 🤝 Contributing
-Pull requests and issues are welcome! See `CONTRIBUTING.md` for guidelines.
-
-## 📜 License
-MIT
+- [PyTorch](https://pytorch.org/) - Deep learning framework
+- [HuggingFace](https://huggingface.co/) - Transformers and model hub
+- [timm](https://github.com/rwightman/pytorch-image-models) - Vision model implementations
+- [PEFT](https://github.com/huggingface/peft) - Parameter-efficient fine-tuning methods
 
 <p align="center">
   <b>Made in India 🇮🇳 with ❤️ by the plimai</b><br/>

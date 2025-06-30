@@ -9,8 +9,8 @@ class Attention(nn.Module):
         self.head_dim = dim // num_heads
         self.scale = self.head_dim ** -0.5
         self.qkv = nn.Linear(dim, dim * 3)
-        self.lora_q = LoRALinear(dim, dim, **lora_config) if lora_config else None
-        self.lora_v = LoRALinear(dim, dim, **lora_config) if lora_config else None
+        self.lora_q = LoRALinear(self.head_dim, self.head_dim, **lora_config) if lora_config else None
+        self.lora_v = LoRALinear(self.head_dim, self.head_dim, **lora_config) if lora_config else None
         self.proj = nn.Linear(dim, dim)
 
     def forward(self, x):

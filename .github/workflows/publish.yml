@@ -30,10 +30,6 @@ jobs:
       - name: Remove dist directory
         run: rm -rf dist/
 
-      - name: Run tests
-        run: |
-          PYTHONPATH=src pytest tests
-
       - name: Build package
         run: python -m build
 

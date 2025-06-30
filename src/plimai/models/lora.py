@@ -17,6 +17,14 @@ class LoRALinear(nn.Module):
 
     def forward(self, x):
         if self.r > 0:
-            return self.dropout(x) @ self.lora_A @ self.lora_B * self.scale
+            orig_shape = x.shape
+            # Flatten all but last dim
+            x_2d = x.reshape(-1, x.shape[-1])
+            # Apply LoRA: (N, in_features) @ (in_features, r) @ (r, out_features) = (N, out_features)
+            lora_out = self.dropout(x_2d) @ self.lora_A @ self.lora_B * self.scale
+            # Reshape back to original except last dim is out_features
+            out_shape = list(orig_shape[:-1]) + [self.lora_B.shape[1]]
+            lora_out = lora_out.view(*out_shape)
+            return lora_out
         else:
             return 0.0 
