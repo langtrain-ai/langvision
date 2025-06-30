@@ -8,6 +8,7 @@ import toml
 import os
 
 def get_project_version():
+    """Return the current project version from pyproject.toml."""
     pyproject_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "pyproject.toml")
     data = toml.load(pyproject_path)
     return data["project"]["version"] 

@@ -1,4 +1,4 @@
-from src.plimai.utils import get_project_version
+from plimai.utils import get_project_version
 
 def test_version_format():
     version = get_project_version()
