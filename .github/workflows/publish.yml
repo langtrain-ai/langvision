@@ -43,4 +43,10 @@ jobs:
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: twine upload dist/* 
+        run: twine upload dist/*
+
+      - name: Clean dist
+        run: rm -rf dist/*
+
+      - name: Show new version
+        run: python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])" 
