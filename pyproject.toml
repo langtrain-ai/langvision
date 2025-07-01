@@ -48,7 +48,7 @@ commit_parser = "conventional"
 plimai-finetune = "plimai.cli.finetune:main"
 
 [bumpver]
-current_version = "0.1.9"
+current_version = "0.1.10"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "Bump version: {old_version} → {new_version}"
 tag_message = "v{new_version}" 
