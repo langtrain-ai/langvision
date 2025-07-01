@@ -1,43 +1,27 @@
-name: Build and Publish to PyPI
+name: Publish Python 🐍 distribution 📦 to PyPI
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-
-      - name: Install build tools and test dependencies
+          python-version: '3.9'
+      - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          pip install build toml twine pytest
-
-      - name: Bump patch version in pyproject.toml
-        run: |
-          python .github/scripts/bump_version.py
-
-      - name: Remove dist directory
-        run: rm -rf dist/
-
+          pip install build twine
       - name: Build package
         run: python -m build
-
-      - name: Check built package
-        run: twine check dist/*
-
-      - name: Publish to PyPI
+      - name: Publish package to PyPI
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: twine upload dist/* 
