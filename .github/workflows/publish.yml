@@ -24,6 +24,8 @@ jobs:
           pip install build twine bumpver
 
       - name: Bump version
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           bumpver update --patch --no-commit
           git config user.name "github-actions[bot]"
@@ -31,6 +33,7 @@ jobs:
           git add .
           git commit -m "ci: bump version [skip ci]"
           git tag v$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.git
           git push --follow-tags
 
       - name: Build package
