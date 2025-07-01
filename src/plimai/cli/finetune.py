@@ -42,6 +42,15 @@ def parse_args():
     parser.add_argument('--cuda_deterministic', action='store_true', help='Enable deterministic CUDA (reproducible, slower)')
     parser.add_argument('--cuda_benchmark', action='store_true', default=True, help='Enable cudnn.benchmark for fast training (default: True)')
     parser.add_argument('--cuda_max_split_size_mb', type=int, default=None, help='Set CUDA max split size in MB (for large models, PyTorch >=1.10)')
+    parser.add_argument('--batch-size', type=int, default=32, help='Batch size for training')
+    parser.add_argument('--learning-rate', type=float, default=1e-4, help='Learning rate')
+    parser.add_argument('--weight-decay', type=float, default=0.01, help='Weight decay (L2 regularization)')
+    parser.add_argument('--model', type=str, default='vit_base', help='Model name or type')
+    parser.add_argument('--checkpoint', type=str, default=None, help='Path to a checkpoint to resume training')
+    parser.add_argument('--config', type=str, default=None, help='Path to a config file (YAML/JSON)')
+    parser.add_argument('--output-dir', type=str, default='./outputs', help='Directory to save outputs and checkpoints')
+    parser.add_argument('--seed', type=int, default=42, help='Random seed for reproducibility')
+    parser.add_argument('--log-level', type=str, default='info', help='Logging level (debug, info, warning, error)')
     return parser.parse_args()
 
 def set_seed(seed):
@@ -53,7 +62,11 @@ def set_seed(seed):
         torch.cuda.manual_seed_all(seed)
 
 def main():
-    args = parse_args()
+    parser = argparse.ArgumentParser(description="Fine-tune a Vision Transformer with LoRA.")
+    parser.add_argument('--dataset', required=True, help='Dataset name')
+    parser.add_argument('--epochs', type=int, default=10, help='Number of epochs')
+    # ... add more arguments ...
+    args = parser.parse_args()
     device = get_device()
     setup_cuda(seed=args.seed if hasattr(args, 'seed') else 42,
                deterministic=args.cuda_deterministic,

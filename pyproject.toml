@@ -19,7 +19,8 @@ classifiers = [
 ]
 dependencies = [
     "torch",
-    "torchvision"
+    "torchvision",
+    "toml",
 ]
 
 [project.urls]
@@ -41,4 +42,7 @@ branch = "main"
 upload_to_pypi = true
 upload_to_release = true
 changelog_sections = ["feature", "fix", "breaking"]
-commit_parser = "conventional" 
+commit_parser = "conventional"
+
+[project.scripts]
+plimai-finetune = "plimai.cli.finetune:main" 
