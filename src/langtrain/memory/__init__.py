@@ -1,5 +1,5 @@
 """
-plimai.memory
+langtrain_ai.memory
 
 This package contains memory management utilities and classes.
 """

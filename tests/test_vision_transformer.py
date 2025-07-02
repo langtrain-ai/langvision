@@ -1,6 +1,6 @@
 import torch
-from langtrain.models.vision_transformer import VisionTransformer
-from langtrain.utils.config import default_config
+from langtrain_ai.models.vision_transformer import VisionTransformer
+from langtrain_ai.utils.config import default_config
 
 def test_vit_output_shape():
     model = VisionTransformer(

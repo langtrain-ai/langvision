@@ -1,5 +1,5 @@
 """
-plimai.config
+langtrain_ai.config
 
 This package contains configuration management utilities and classes.
 """

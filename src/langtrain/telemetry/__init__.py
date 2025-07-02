@@ -1,5 +1,5 @@
 """
-plimai.telemetry
+langtrain_ai.telemetry
 
 This package contains telemetry and logging utilities.
 """

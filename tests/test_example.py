@@ -1,4 +1,4 @@
-from langtrain.example import hello, get_version
+from langtrain_ai.example import hello, get_version
 
 def test_hello():
     assert hello("World") == "Hello, World!"

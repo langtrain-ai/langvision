@@ -1,51 +1,35 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "langtrain"
-version = "0.1.9"
+name = "langtrain-ai"
+version = "0.0.3"
+description = "Vision LLMs with Efficient LoRA Fine-Tuning"
 authors = [
-    { name = "Pritesh Raj", email = "priteshraj41@gmail.com" },
+    { name = "Pritesh Raj", email = "priteshraj10@gmail.com" }
 ]
-description = "Vision LLMs with LoRA fine-tuning."
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.8"
-license = "MIT"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
 dependencies = [
-    "torch",
-    "torchvision",
-    "toml",
+    "torch>=1.10",
+    "numpy",
+    "tqdm",
+    "pyyaml",
+    "scipy",
+    "matplotlib",
+    "pillow"
 ]
 
 [project.urls]
-Documentation = "https://github.com/langtrain-ai/langtrain/tree/main/docs"
-Download = "https://pypi.org/project/langtrain/#files"
 Homepage = "https://github.com/langtrain-ai/langtrain"
-"Release Notes" = "https://github.com/langtrain-ai/langtrain/releases"
+Documentation = "https://github.com/langtrain-ai/langtrain/tree/main/docs"
 Source = "https://github.com/langtrain-ai/langtrain"
 Tracker = "https://github.com/langtrain-ai/langtrain/issues"
-Funding = "https://github.com/sponsors/langtrain-ai"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/langtrain"]
-
-[tool.semantic_release]
-version_variable = ["pyproject.toml:version"]
-commit_message = "{version}"
-branch = "main"
-upload_to_pypi = true
-upload_to_release = true
-changelog_sections = ["feature", "fix", "breaking"]
-commit_parser = "conventional"
 
 [project.scripts]
-langtrain-finetune = "langtrain.cli.finetune:main"
+langtrain-ai-finetune = "langtrain_ai.cli.finetune:main"
 
 [bumpver]
 current_version = "0.1.10"

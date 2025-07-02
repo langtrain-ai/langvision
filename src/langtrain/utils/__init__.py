@@ -1,7 +1,7 @@
 """
-plimai.utils
+langtrain_ai.utils
 
-Utility functions for the plimai project.
+Utility functions for the langtrain_ai project.
 """
 
 import toml

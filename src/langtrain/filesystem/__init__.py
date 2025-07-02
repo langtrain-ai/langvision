@@ -1,5 +1,5 @@
 """
-plimai.filesystem
+langtrain_ai.filesystem
 
 This package contains filesystem utility functions and classes.
 """

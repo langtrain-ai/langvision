@@ -1,5 +1,5 @@
 """
-plimai.sync
+langtrain_ai.sync
 
 This package contains synchronization utilities and classes.
 """

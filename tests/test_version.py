@@ -1,4 +1,4 @@
-from langtrain.utils import get_project_version, parse_version
+from langtrain_ai.utils import get_project_version, parse_version
 
 def test_version_format():
     version = get_project_version()

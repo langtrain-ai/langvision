@@ -1,14 +1,14 @@
 import torch
 import os
 import logging
-from plimai.callbacks.base import Callback
+from langtrain_ai.callbacks.base import Callback
 
-logger = logging.getLogger("plimai.trainer")
+logger = logging.getLogger("langtrain_ai.trainer")
 
 class Trainer:
     """
     Modular Trainer for fine-tuning with support for:
-    - Mixed precision (AMP)
+    - Mixed precision (AMP) 
     - Checkpointing
     - Callbacks
     - Distributed/multi-GPU (use torch.nn.parallel.DistributedDataParallel)
