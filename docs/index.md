@@ -1,9 +1,9 @@
-# plimai Documentation
+# langtrain Documentation
 
-Welcome to the plimai documentation!
+Welcome to the langtrain documentation!
 
 ## Overview
-plimai is a modular framework for Vision LLMs with LoRA fine-tuning and a unified model zoo for open-source visual models.
+langtrain is a modular framework for Vision LLMs with LoRA fine-tuning and a unified model zoo for open-source visual models.
 
 ## Contents
 - [Getting Started](../README.md)
