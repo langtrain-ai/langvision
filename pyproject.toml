@@ -3,10 +3,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "plimai"
+name = "langtrain"
 version = "0.1.9"
 authors = [
-    { name = "Plim", email = "priteshraj41@gmail.com" },
+    { name = "Pritesh Raj", email = "priteshraj41@gmail.com" },
 ]
 description = "Vision LLMs with LoRA fine-tuning."
 readme = "README.md"
@@ -24,16 +24,16 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/plimai/plim/tree/main/docs"
-Download = "https://pypi.org/project/plimai/#files"
-Homepage = "https://github.com/plimai/plim"
-"Release Notes" = "https://github.com/plimai/plim/releases"
-Source = "https://github.com/plimai/plim"
-Tracker = "https://github.com/plimai/plim/issues"
+Documentation = "https://github.com/plimai/langtrain/tree/main/docs"
+Download = "https://pypi.org/project/langtrain/#files"
+Homepage = "https://github.com/plimai/langtrain"
+"Release Notes" = "https://github.com/plimai/langtrain/releases"
+Source = "https://github.com/plimai/langtrain"
+Tracker = "https://github.com/plimai/langtrain/issues"
 Funding = "https://github.com/sponsors/plimai"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/plimai"]
+packages = ["src/langtrain"]
 
 [tool.semantic_release]
 version_variable = ["pyproject.toml:version"]
@@ -45,7 +45,7 @@ changelog_sections = ["feature", "fix", "breaking"]
 commit_parser = "conventional"
 
 [project.scripts]
-plimai-finetune = "plimai.cli.finetune:main"
+langtrain-finetune = "langtrain.cli.finetune:main"
 
 [bumpver]
 current_version = "0.1.10"

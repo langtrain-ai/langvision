@@ -3,8 +3,8 @@
 <hr/>
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="static/plimai-use-dark.png">
-    <img src="https://raw.githubusercontent.com/plimai/plim/main/static/plimai-white.png" alt="Plimai Logo" width="full"/>
+    <source media="(prefers-color-scheme: dark)" srcset="static/langtrain-use-dark.png">
+    <img src="static/langtrain-white.png" alt="Langtrain Logo" width="full"/>
   </picture>
 </p>
 
