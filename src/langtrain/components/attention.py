@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from plimai.models.lora import LoRALinear
+from langchain.models.lora import LoRALinear
 
 class Attention(nn.Module):
     def __init__(self, dim, num_heads=8, lora_config=None):

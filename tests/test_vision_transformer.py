@@ -1,6 +1,6 @@
 import torch
-from plimai.models.vision_transformer import VisionTransformer
-from plimai.utils.config import default_config
+from langtrain.models.vision_transformer import VisionTransformer
+from langtrain.utils.config import default_config
 
 def test_vit_output_shape():
     model = VisionTransformer(

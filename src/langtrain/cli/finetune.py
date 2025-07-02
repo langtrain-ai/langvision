@@ -4,12 +4,12 @@ import logging
 import os
 import random
 import numpy as np
-from plimai.models.vision_transformer import VisionTransformer
-from plimai.data.datasets import get_dataset
-from plimai.training.trainer import Trainer
-from plimai.callbacks.early_stopping import EarlyStopping
-from plimai.utils.device import get_device
-from plimai.utils.cuda import setup_cuda
+from langtrain.models.vision_transformer import VisionTransformer
+from langtrain.data.datasets import get_dataset
+from langtrain.training.trainer import Trainer
+from langtrain.callbacks.early_stopping import EarlyStopping
+from langtrain.utils.device import get_device
+from langtrain.utils.cuda import setup_cuda
 
 
 def set_seed(seed: int) -> None:

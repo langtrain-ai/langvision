@@ -1,8 +1,8 @@
-from plimai.example import hello, get_version
+from langtrain.example import hello, get_version
 
 def test_hello():
     assert hello("World") == "Hello, World!"
-    assert hello("Plim") == "Hello, Plim!"
+    assert hello("Langtrain") == "Hello, Langtrain!"
 
 def test_get_version():
     version = get_version()

@@ -1,6 +1,6 @@
-# 🚧 Plimai Roadmap
+# 🚧 Langchain Roadmap
 
-This roadmap outlines the planned features, improvements, and vision for the plimai project. We welcome community feedback and contributions—open an issue or join the discussion to suggest new ideas!
+This roadmap outlines the planned features, improvements, and vision for the langchain project. We welcome community feedback and contributions—open an issue or join the discussion to suggest new ideas!
 
 ---
 
@@ -51,4 +51,4 @@ This roadmap outlines the planned features, improvements, and vision for the pli
 
 ---
 
-<p align="center"><b>We build plimai in the open—your feedback shapes the future!</b></p> 
+<p align="center"><b>We build langchain in the open—your feedback shapes the future!</b></p> 

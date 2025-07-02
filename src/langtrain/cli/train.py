@@ -1,8 +1,8 @@
 import argparse
 import torch
-from plimai.models.vision_transformer import VisionTransformer
-from plimai.utils.config import default_config
-from plimai.utils.data import get_preprocessing
+from langtrain.models.vision_transformer import VisionTransformer
+from langtrain.utils.config import default_config
+from langtrain.utils.data import get_preprocessing
 from torchvision import datasets
 from torch.utils.data import DataLoader
 import os

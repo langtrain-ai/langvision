@@ -1,5 +1,5 @@
 import torch
-from plimai.models.lora import LoRALinear
+from langtrain.models.lora import LoRALinear
 
 def test_lora_linear():
     layer = LoRALinear(8, 16, r=2, alpha=1.0)

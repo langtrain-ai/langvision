@@ -24,13 +24,13 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/plimai/langtrain/tree/main/docs"
+Documentation = "https://github.com/langtrain-ai/langtrain/tree/main/docs"
 Download = "https://pypi.org/project/langtrain/#files"
-Homepage = "https://github.com/plimai/langtrain"
-"Release Notes" = "https://github.com/plimai/langtrain/releases"
-Source = "https://github.com/plimai/langtrain"
-Tracker = "https://github.com/plimai/langtrain/issues"
-Funding = "https://github.com/sponsors/plimai"
+Homepage = "https://github.com/langtrain-ai/langtrain"
+"Release Notes" = "https://github.com/langtrain-ai/langtrain/releases"
+Source = "https://github.com/langtrain-ai/langtrain"
+Tracker = "https://github.com/langtrain-ai/langtrain/issues"
+Funding = "https://github.com/sponsors/langtrain-ai"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/langtrain"]
