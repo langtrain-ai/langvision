@@ -1,4 +1,4 @@
-# plimai: Vision LLMs (Large Language Models for Vision) with Efficient LoRA Fine-Tuning
+# langtrain: Vision LLMs (Large Language Models for Vision) with Efficient LoRA Fine-Tuning
 
 <hr/>
 <p align="center">
@@ -10,8 +10,8 @@
 
 <!-- Badges -->
 <p align="center">
-  <a href="https://pypi.org/project/plimai/"><img src="https://img.shields.io/pypi/v/plimai.svg" alt="PyPI version"></a>
-  <a href="https://pepy.tech/project/plimai"><img src="https://pepy.tech/badge/plimai" alt="Downloads"></a>
+  <a href="https://pypi.org/project/langtrain/"><img src="https://img.shields.io/pypi/v/langtrain.svg" alt="PyPI version"></a>
+  <a href="https://pepy.tech/project/langtrain"><img src="https://pepy.tech/badge/langtrain" alt="Downloads"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"></a>
   <a href="https://img.shields.io/badge/coverage-90%25-brightgreen" alt="Coverage"> <img src="https://img.shields.io/badge/coverage-90%25-brightgreen"/></a>
   <a href="https://img.shields.io/badge/python-3.8%2B-blue" alt="Python Version"> <img src="https://img.shields.io/badge/python-3.8%2B-blue"/></a>
@@ -38,7 +38,7 @@
 - [Showcase](#-showcase)
 - [Getting Started](#-getting-started)
 - [Supported Python Versions](#-supported-python-versions)
-- [Why Plimai?](#-why-plimai)
+- [Why Langtrain?](#-why-langtrain)
 - [Architecture Overview](#-architecture-overview)
 - [Core Modules](#-core-modules)
 - [Performance & Efficiency](#-performance--efficiency)
@@ -75,7 +75,7 @@
 
 ## 🚀 Showcase
 
-**plimai** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. Whether you're working on image classification, visual question answering, or custom vision tasks, plimai provides the tools you need for parameter-efficient model adaptation.
+**langtrain** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. Whether you're working on image classification, visual question answering, or custom vision tasks, langtrain provides the tools you need for parameter-efficient model adaptation.
 
 ---
 
@@ -84,13 +84,13 @@
 Here's a minimal example to get you up and running:
 
 ```bash
-pip install plimai
+pip install langtrain
 ```
 
 ```python
 import torch
-from plimai.models.vision_transformer import VisionTransformer
-from plimai.utils.config import default_config
+from langtrain.models.vision_transformer import VisionTransformer
+from langtrain.utils.config import default_config
 
 # Create model
 x = torch.randn(2, 3, 224, 224)
@@ -112,7 +112,7 @@ with torch.no_grad():
     print('Output shape:', out.shape)
 ```
 
-For advanced usage, CLI details, and more, see the [Documentation](docs/index.md) and [src/plimai/cli/finetune.py](src/plimai/cli/finetune.py).
+For advanced usage, CLI details, and more, see the [Documentation](docs/index.md) and [src/langtrain/cli/finetune.py](src/langtrain/cli/finetune.py).
 
 ---
 
@@ -121,7 +121,7 @@ For advanced usage, CLI details, and more, see the [Documentation](docs/index.md
 
 ---
 
-## 🧩 Why Plimai?
+## 🧩 Why Langtrain?
 
 - **Parameter-efficient fine-tuning**: Plug-and-play LoRA adapters for fast, memory-efficient adaptation with minimal computational overhead
 - **Modular ViT backbone**: Swap or extend components like patch embedding, attention, or MLP heads with ease
@@ -133,7 +133,7 @@ For advanced usage, CLI details, and more, see the [Documentation](docs/index.md
 
 ## 🏗️ Architecture Overview
 
-plimai is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters strategically injected into attention and MLP layers for efficient fine-tuning. This approach allows you to adapt large pre-trained models using only a fraction of the original parameters.
+langtrain is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters strategically injected into attention and MLP layers for efficient fine-tuning. This approach allows you to adapt large pre-trained models using only a fraction of the original parameters.
 
 ### Model Data Flow
 
@@ -294,7 +294,7 @@ pytest tests/integration/
 pytest tests/benchmarks/
 
 # All tests with coverage
-pytest tests/ --cov=plimai --cov-report=html
+pytest tests/ --cov=langtrain --cov-report=html
 ```
 
 ### Code Quality Tools
@@ -317,8 +317,8 @@ bandit -r src/
 
 ### Image Classification
 ```python
-from plimai import VisionTransformer
-from plimai.datasets import CIFAR10Dataset
+from langtrain import VisionTransformer
+from langtrain.datasets import CIFAR10Dataset
 
 # Load pre-trained model
 model = VisionTransformer.from_pretrained("vit_base_patch16_224")
@@ -330,7 +330,7 @@ model.finetune(dataset, epochs=10, lora_rank=16)
 
 ### Custom Dataset
 ```python
-from plimai.datasets import ImageFolderDataset
+from langtrain.datasets import ImageFolderDataset
 
 # Your custom dataset
 dataset = ImageFolderDataset(
@@ -349,14 +349,14 @@ model.finetune(
 ---
 
 ## 🧩 Extending the Framework
-- Add new datasets in `src/plimai/data/datasets.py`
-- Add new callbacks in `src/plimai/callbacks/`
-- Add new models in `src/plimai/models/`
-- Add new CLI tools in `src/plimai/cli/`
+- Add new datasets in `src/langtrain/data/datasets.py`
+- Add new callbacks in `src/langtrain/callbacks/`
+- Add new models in `src/langtrain/models/`
+- Add new CLI tools in `src/langtrain/cli/`
 
 ## 📖 Documentation
 - See code comments and docstrings for details on each module.
-- For advanced usage, see the `src/plimai/cli/finetune.py` script.
+- For advanced usage, see the `src/langtrain/cli/finetune.py` script.
 
 ## 🤝 Contributing
 We welcome contributions from the community! Here's how you can get involved:
@@ -371,8 +371,8 @@ We welcome contributions from the community! Here's how you can get involved:
 ### Development Setup
 ```bash
 # Clone and setup development environment
-git clone https://github.com/plim-ai/plim.git
-cd plim
+git clone https://github.com/langtrain-ai/langtrain.git
+cd langtrain
 pip install -e ".[dev]"
 
 # Install pre-commit hooks
@@ -383,8 +383,8 @@ pytest tests/
 ```
 
 ### Community Resources
-- 💬 [GitHub Discussions](https://github.com/plim-ai/plim/discussions) - Ask questions and share ideas
-- 🐛 [Issue Tracker](https://github.com/plim-ai/plim/issues) - Report bugs and request features
+- 💬 [GitHub Discussions](https://github.com/langtrain-ai/langtrain/discussions) - Ask questions and share ideas
+- 🐛 [Issue Tracker](https://github.com/langtrain-ai/langtrain/issues) - Report bugs and request features
 - 📖 [Contributing Guide](CONTRIBUTING.md) - Detailed contribution guidelines
 - 🎯 [Roadmap](ROADMAP.md) - See what's planned for future releases
 
@@ -394,95 +394,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Citation
 
-If you use plimai in your research, please cite:
+If you use langtrain in your research, please cite:
 
 ```bibtex
-@software{plimai2025,
+@software{langtrain2025,
   author = {Pritesh Raj},
-  title = {plimai: Vision LLMs with Efficient LoRA Fine-Tuning},
-  url = {https://github.com/plim-ai/plim},
-  year = {2025},
-  version = {1.0.0}
-}
-```
-
-## 🌟 Acknowledgements
-
-We thank the following projects and communities:
-
-- [PyTorch](https://pytorch.org/) - Deep learning framework
-- [HuggingFace](https://huggingface.co/) - Transformers and model hub
-- [timm](https://github.com/rwightman/pytorch-image-models) - Vision model implementations
-- [PEFT](https://github.com/huggingface/peft) - Parameter-efficient fine-tuning methods
-
-## ❓ FAQ
-
-<details>
-<summary><b>Q: I get a CUDA out of memory error during training!</b></summary>
-
-**A:** Try these solutions in order:
-- Reduce batch size: `--batch_size 16` or `--batch_size 8`
-- Enable gradient checkpointing: `--gradient_checkpointing`
-- Use a smaller model: `--model vit_small` instead of `vit_base`
-- Reduce LoRA rank: `--lora_rank 8` instead of `16`
-</details>
-
-<details>
-<summary><b>Q: How do I add my own dataset?</b></summary>
-
-**A:** Create a custom dataset class:
-```python
-from plimai.datasets import BaseDataset
-
-class MyDataset(BaseDataset):
-    def __init__(self, root, transform=None):
-        super().__init__(root, transform)
-        # Your dataset initialization
-    
-    def __getitem__(self, idx):
-        # Return (image, label) tuple
-        pass
-```
-</details>
-
-<details>
-<summary><b>Q: Can I use plimai with other vision architectures?</b></summary>
-
-**A:** Currently plimai focuses on Vision Transformers, but we're working on support for:
-- ConvNeXT
-- Swin Transformer  
-- EfficientNet
-- ResNet with LoRA
-
-Check our [roadmap](ROADMAP.md) for updates!
-</details>
-
-<details>
-<summary><b>Q: How do I merge LoRA weights for inference?</b></summary>
-
-**A:** Use the merge functionality:
-```python
-# Merge LoRA weights into base model
-model.merge_lora_weights()
-
-# Save merged model
-model.save_pretrained("path/to/merged/model")
-```
-</details>
-
-## 📄 License & Citation
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-### Citation
-
-If you use plimai in your research, please cite:
-
-```bibtex
-@software{plimai2025,
-  author = {Pritesh Raj},
-  title = {plimai: Vision LLMs with Efficient LoRA Fine-Tuning},
-  url = {https://github.com/plim-ai/plim},
+  title = {langtrain: Vision LLMs with Efficient LoRA Fine-Tuning},
+  url = {https://github.com/langtrain-ai/langtrain},
   year = {2025},
   version = {1.0.0}
 }
@@ -498,6 +416,6 @@ We thank the following projects and communities:
 - [PEFT](https://github.com/huggingface/peft) - Parameter-efficient fine-tuning methods
 
 <p align="center">
-  <b>Made in India 🇮🇳 with ❤️ by the plimai</b><br/>
+  <b>Made in India 🇮🇳 with ❤️ by the langtrain team</b><br/>
   <i>Star ⭐ this repo if you find it useful!</i>
 </p>
