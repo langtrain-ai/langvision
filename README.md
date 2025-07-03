@@ -1,4 +1,4 @@
-# langtrain: Vision LLMs (Large Language Models for Vision) with Efficient LoRA Fine-Tuning
+# Langvision: Efficient LoRA Fine-Tuning for Vision LLMs
 
 <hr/>
 <p align="center">
@@ -19,12 +19,12 @@
 </p>
 
 <p align="center">
-  <b>Modular Vision LLMs (Large Language Models for Vision) with Efficient LoRA Fine-Tuning</b><br/>
-  <span style="font-size:1.1em"><i>Build, adapt, and fine-tune vision models with ease and efficiency.</i></span>
+  <b>Langvision is a Python package for fine-tuning vision models on image data using LoRA.</b><br/>
+  <span style="font-size:1.1em"><i>Provides modular components for adapting vision models to various computer vision tasks.</i></span>
 </p>
 <hr/>
 
-## 🚀 Quick Links
+## Quick Links
 - [Documentation](docs/index.md)
 - [Tutorials](docs/tutorials/index.md)
 - [Changelog](CHANGELOG.md)
@@ -33,66 +33,61 @@
 
 ---
 
-## 📚 Table of Contents
-- [Features](#-features)
-- [Showcase](#-showcase)
-- [Getting Started](#-getting-started)
-- [Supported Python Versions](#-supported-python-versions)
-- [Why langvision?](#-why-langvision)
-- [Architecture Overview](#-architecture-overview)
-- [Core Modules](#-core-modules)
-- [Performance & Efficiency](#-performance--efficiency)
-- [Advanced Configuration](#-advanced-configuration)
-- [Documentation & Resources](#-documentation--resources)
-- [Testing & Quality](#-testing--quality)
-- [Examples & Use Cases](#-examples--use-cases)
-- [Extending the Framework](#-extending-the-framework)
-- [Contributing](#-contributing)
-- [FAQ](#-faq)
-- [Citation](#-citation)
-- [Acknowledgements](#-acknowledgements)
-- [License](#-license)
+## Table of Contents
+- [Features](#features)
+- [Showcase](#showcase)
+- [Getting Started](#getting-started)
+- [Supported Python Versions](#supported-python-versions)
+- [Why langvision?](#why-langvision)
+- [Architecture Overview](#architecture-overview)
+- [Core Modules](#core-modules)
+- [Performance & Efficiency](#performance--efficiency)
+- [Advanced Configuration](#advanced-configuration)
+- [Documentation & Resources](#documentation--resources)
+- [Testing & Quality](#testing--quality)
+- [Examples & Use Cases](#examples--use-cases)
+- [Extending the Framework](#extending-the-framework)
+- [Contributing](#contributing)
+- [License](#license)
+- [Citation](#citation)
+- [Acknowledgements](#acknowledgements)
 
 ---
 
-## ✨ Features
-- 🔧 **Plug-and-play LoRA adapters** for parameter-efficient fine-tuning
-- 🏗️ **Modular Vision Transformer (ViT) backbone** with customizable components
-- 🎯 **Unified model zoo** for open-source visual models
-- ⚙️ **Easy configuration** and extensible codebase
-- 🚀 **Production ready** with comprehensive testing and documentation
-- 💾 **Memory efficient** training with gradient checkpointing support
-- 📊 **Built-in metrics** and visualization tools
-- 🧩 **Modular training loop** with LoRA support
-- 🎯 **Unified CLI** for fine-tuning and evaluation
-- 🔌 **Extensible callbacks** (early stopping, logging, etc.)
-- 📦 **Checkpointing and resume**
-- 🚀 **Mixed precision training**
-- 🔧 **Easy dataset and model extension**
-- ⚡ **Ready for distributed/multi-GPU training**
+## Features
+- LoRA adapters for efficient fine-tuning
+- Modular Vision Transformer (ViT) backbone
+- Model zoo for vision models
+- Configurable and extensible codebase
+- Checkpointing and resume
+- Mixed precision and distributed training
+- Metrics and visualization tools
+- CLI for training and evaluation
+- Callback support (early stopping, logging, etc.)
 
 ---
 
-## 🚀 Showcase
+## Showcase
 
-**langvision** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. Whether you're working on image classification, visual question answering, or custom vision tasks, langvision provides the tools you need for parameter-efficient model adaptation.
+Langvision is intended for building and fine-tuning vision models with LoRA. It can be used for image classification, visual question answering, and other computer vision tasks.
 
 ---
 
-## 🏁 Getting Started
+## Getting Started
 
-Here's a minimal example to get you up and running:
+Install:
 
 ```bash
 pip install langvision
 ```
+
+Example usage:
 
 ```python
 import torch
 from langvision.models.vision_transformer import VisionTransformer
 from langvision.utils.config import default_config
 
-# Create model
 x = torch.randn(2, 3, 224, 224)
 model = VisionTransformer(
     img_size=default_config['img_size'],
@@ -106,34 +101,33 @@ model = VisionTransformer(
     lora_config=default_config['lora'],
 )
 
-# Forward pass
 with torch.no_grad():
     out = model(x)
     print('Output shape:', out.shape)
 ```
 
-For advanced usage, CLI details, and more, see the [Documentation](docs/index.md) and [src/langvision/cli/finetune.py](src/langvision/cli/finetune.py).
+See the [Documentation](docs/index.md) and [src/langvision/cli/finetune.py](src/langvision/cli/finetune.py) for more details.
 
 ---
 
-## 🐍 Supported Python Versions
-- Python 3.8+
+## Supported Python Versions
+- Python 3.8 or newer
 
 ---
 
-## 🧩 Why langvision?
+## Why langvision?
 
-- **Parameter-efficient fine-tuning**: Plug-and-play LoRA adapters for fast, memory-efficient adaptation with minimal computational overhead
-- **Modular ViT backbone**: Swap or extend components like patch embedding, attention, or MLP heads with ease
-- **Unified model zoo**: Access and experiment with open-source visual models through a consistent interface
-- **Research & production ready**: Clean, extensible codebase with comprehensive configuration options and robust utilities
-- **Memory efficient**: Fine-tune large models on consumer hardware by updating only a small fraction of parameters
+- Fine-tuning with LoRA adapters
+- Modular ViT backbone design
+- Unified interface for vision models
+- Suitable for research and production
+- Efficient memory usage
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
-langvision is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters strategically injected into attention and MLP layers for efficient fine-tuning. This approach allows you to adapt large pre-trained models using only a fraction of the original parameters.
+Langvision uses a Vision Transformer backbone with LoRA adapters in attention and MLP layers. This enables adaptation of pre-trained models with fewer trainable parameters.
 
 ### Model Data Flow
 
@@ -165,97 +159,64 @@ flowchart TD
     classDef loraStyle fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
 ```
 
-### Architecture Components
-
-**Legend:**
-- **Solid arrows**: Main data flow through the Vision Transformer
-- **Dashed arrows**: LoRA adapter injection points in encoder layers
-- **Blue boxes**: LoRA adapters for parameter-efficient fine-tuning
-
-**Data Flow Steps:**
-1. **Input Image** (224×224×3): Raw image data ready for processing
-2. **Patch Embedding**: Image split into 16×16 patches and projected to embedding dimension
-3. **CLS Token & Positional Encoding**: Classification token prepended with learnable position embeddings
-4. **Transformer Encoder Stack**: Multi-layer transformer with self-attention and MLP blocks
-   - **LoRA Integration**: Low-rank adapters injected into attention and MLP layers
-   - **Efficient Updates**: Only LoRA parameters updated during fine-tuning
-5. **LayerNorm**: Final normalization of encoder outputs
-6. **MLP Head**: Task-specific classification or regression head
-7. **Output**: Final predictions (class probabilities, regression values, etc.)
-
 ---
 
-## 🧩 Core Modules
+## Core Modules
 
 | Module | Description | Key Features |
 |--------|-------------|--------------|
-| **PatchEmbedding** | Image-to-patch conversion and embedding | • Configurable patch sizes<br>• Learnable position embeddings<br>• Support for different input resolutions |
-| **TransformerEncoder** | Multi-layer transformer backbone | • Self-attention mechanisms<br>• LoRA adapter integration<br>• Gradient checkpointing support |
-| **LoRALinear** | Low-rank adaptation layers | • Configurable rank and scaling<br>• Memory-efficient updates<br>• Easy enable/disable functionality |
-| **MLPHead** | Output projection layer | • Multi-class classification<br>• Regression support<br>• Dropout regularization |
-| **Config System** | Centralized configuration management | • YAML/JSON config files<br>• Command-line overrides<br>• Validation and defaults |
-| **Data Utils** | Preprocessing and augmentation | • Built-in transforms<br>• Custom dataset loaders<br>• Efficient data pipelines |
+| PatchEmbedding | Image-to-patch conversion and embedding | Configurable patch sizes, position embeddings |
+| TransformerEncoder | Multi-layer transformer backbone | Self-attention, LoRA integration, checkpointing |
+| LoRALinear | Low-rank adaptation layers | Configurable rank, memory-efficient updates |
+| MLPHead | Output projection layer | Classification, regression, dropout |
+| Config System | Centralized configuration | YAML/JSON config, CLI overrides |
+| Data Utils | Preprocessing and augmentation | Built-in transforms, custom loaders |
 
 ---
 
-## 📊 Performance & Efficiency
-
-### LoRA Benefits
+## Performance & Efficiency
 
 | Metric | Full Fine-tuning | LoRA Fine-tuning | Improvement |
 |--------|------------------|------------------|-------------|
-| **Trainable Parameters** | 86M | 2.4M | **97% reduction** |
-| **Memory Usage** | 12GB | 4GB | **67% reduction** |
-| **Training Time** | 4 hours | 1.5 hours | **62% faster** |
-| **Storage per Task** | 344MB | 9.6MB | **97% smaller** |
+| Trainable Parameters | 86M | 2.4M | 97% reduction |
+| Memory Usage | 12GB | 4GB | 67% reduction |
+| Training Time | 4h | 1.5h | 62% faster |
+| Storage per Task | 344MB | 9.6MB | 97% smaller |
 
-*Benchmarks on ViT-Base with CIFAR-100, RTX 3090*
+*Benchmarks: ViT-Base, CIFAR-100, RTX 3090*
 
-### Supported Model Sizes
-
-- **ViT-Tiny**: 5.7M parameters, perfect for experimentation
-- **ViT-Small**: 22M parameters, good balance of performance and efficiency  
-- **ViT-Base**: 86M parameters, strong performance across tasks
-- **ViT-Large**: 307M parameters, state-of-the-art results
+Supported model sizes: ViT-Tiny, ViT-Small, ViT-Base, ViT-Large
 
 ---
 
-## 🔧 Advanced Configuration
+## Advanced Configuration
 
-### LoRA Configuration
+Example LoRA config:
 
 ```python
 lora_config = {
-    "rank": 16,                    # Low-rank dimension
-    "alpha": 32,                   # Scaling factor
-    "dropout": 0.1,                # Dropout rate
-    "target_modules": [            # Modules to adapt
-        "attention.qkv",
-        "attention.proj", 
-        "mlp.fc1",
-        "mlp.fc2"
-    ],
-    "merge_weights": False         # Whether to merge during inference
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.1,
+    "target_modules": ["attention.qkv", "attention.proj", "mlp.fc1", "mlp.fc2"],
+    "merge_weights": False
 }
 ```
 
-### Training Configuration
+Example training config:
 
 ```yaml
-# config.yaml
 model:
   name: "vit_base"
   img_size: 224
   patch_size: 16
   num_classes: 1000
-
 training:
   epochs: 10
   batch_size: 32
   learning_rate: 1e-4
   weight_decay: 0.01
   warmup_steps: 1000
-
 lora:
   rank: 16
   alpha: 32
@@ -264,13 +225,12 @@ lora:
 
 ---
 
-## 📚 Documentation & Resources
-
-- 📖 [Complete API Reference](docs/api/index.md)
-- 🎓 [Tutorials and Examples](docs/tutorials/index.md)
-- 🔬 [Research Papers](#research-papers)
-- 💡 [Best Practices Guide](docs/best_practices.md)
-- 🐛 [Troubleshooting](docs/troubleshooting.md)
+## Documentation & Resources
+- [API Reference](docs/index.md)
+- [Tutorials and Examples](docs/tutorials/index.md)
+- [Research Papers](#research-papers)
+- [Best Practices Guide](docs/best_practices.md)
+- [Troubleshooting](docs/troubleshooting.md)
 
 ### Research Papers
 - [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685)
@@ -279,122 +239,73 @@ lora:
 
 ---
 
-## 🧪 Testing & Quality
+## Testing & Quality
 
-Run the comprehensive test suite:
+Run tests:
 
 ```bash
-# Unit tests
-pytest tests/unit/
-
-# Integration tests  
-pytest tests/integration/
-
-# Performance benchmarks
-pytest tests/benchmarks/
-
-# All tests with coverage
-pytest tests/ --cov=langvision --cov-report=html
+pytest tests/
 ```
 
-### Code Quality Tools
+Code quality tools:
 
 ```bash
-# Linting
 flake8 src/
 black src/ --check
-
-# Type checking
 mypy src/
-
-# Security scanning
 bandit -r src/
 ```
 
 ---
 
-## 🚀 Examples & Use Cases
+## Examples & Use Cases
 
-### Image Classification
+Image classification:
+
 ```python
 from langvision import VisionTransformer
 from langvision.datasets import CIFAR10Dataset
 
-# Load pre-trained model
 model = VisionTransformer.from_pretrained("vit_base_patch16_224")
-
-# Fine-tune on CIFAR-10
 dataset = CIFAR10Dataset(train=True, transform=model.default_transform)
 model.finetune(dataset, epochs=10, lora_rank=16)
 ```
 
-### Custom Dataset
+Custom dataset:
+
 ```python
 from langvision.datasets import ImageFolderDataset
 
-# Your custom dataset
 dataset = ImageFolderDataset(
     root="/path/to/dataset",
     split="train",
     transform=model.default_transform
 )
-
-# Fine-tune with custom configuration
-model.finetune(
-    dataset, 
-    config_path="configs/custom_config.yaml"
-)
+model.finetune(dataset, config_path="configs/custom_config.yaml")
 ```
 
 ---
 
-## 🧩 Extending the Framework
-- Add new datasets in `src/langvision/data/datasets.py`
-- Add new callbacks in `src/langvision/callbacks/`
-- Add new models in `src/langvision/models/`
-- Add new CLI tools in `src/langvision/cli/`
+## Extending the Framework
+- Add datasets in `src/langvision/data/datasets.py`
+- Add callbacks in `src/langvision/callbacks/`
+- Add models in `src/langvision/models/`
+- Add CLI tools in `src/langvision/cli/`
 
-## 📖 Documentation
-- See code comments and docstrings for details on each module.
-- For advanced usage, see the `src/langvision/cli/finetune.py` script.
+## Documentation
+- See code comments and docstrings for details.
+- For advanced usage, see `src/langvision/cli/finetune.py`.
 
-## 🤝 Contributing
-We welcome contributions from the community! Here's how you can get involved:
+## Contributing
+Contributions are welcome. See the [Contributing Guide](CONTRIBUTING.md) for details.
 
-### Ways to Contribute
-- 🐛 **Report bugs** by opening issues with detailed reproduction steps
-- 💡 **Suggest features** through feature requests and discussions
-- 📝 **Improve documentation** with examples, tutorials, and API docs
-- 🔧 **Submit pull requests** for bug fixes and new features
-- 🧪 **Add tests** to improve code coverage and reliability
+## License
 
-### Development Setup
-```bash
-# Clone and setup development environment
-git clone https://github.com/langtrain-ai/langvision.git
-cd langvision
-pip install -e ".[dev]"
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-# Install pre-commit hooks
-pre-commit install
+## Citation
 
-# Run tests
-pytest tests/
-```
-
-### Community Resources
-- 💬 [GitHub Discussions](https://github.com/langtrain-ai/langvision/discussions) - Ask questions and share ideas
-- 🐛 [Issue Tracker](https://github.com/langtrain-ai/langvision/issues) - Report bugs and request features
-- 📖 [Contributing Guide](CONTRIBUTING.md) - Detailed contribution guidelines
-- 🎯 [Roadmap](ROADMAP.md) - See what's planned for future releases
-
-## 📄 License & Citation
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-### Citation
-
-If you use langtrain in your research, please cite:
+If you use langvision in your research, please cite:
 
 ```bibtex
 @software{langtrain2025,
@@ -406,14 +317,13 @@ If you use langtrain in your research, please cite:
 }
 ```
 
-## 🌟 Acknowledgements
+## Acknowledgements
 
 We thank the following projects and communities:
-
-- [PyTorch](https://pytorch.org/) - Deep learning framework
-- [HuggingFace](https://huggingface.co/) - Transformers and model hub
-- [timm](https://github.com/rwightman/pytorch-image-models) - Vision model implementations
-- [PEFT](https://github.com/huggingface/peft) - Parameter-efficient fine-tuning methods
+- [PyTorch](https://pytorch.org/)
+- [HuggingFace](https://huggingface.co/)
+- [timm](https://github.com/rwightman/pytorch-image-models)
+- [PEFT](https://github.com/huggingface/peft)
 
 <p align="center">
   <b>Made in India 🇮🇳 with ❤️ by the langtrain team</b><br/>

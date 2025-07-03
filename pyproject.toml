@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langvision"
-version = "0.0.1"
-description = "Vision LLMs with Efficient LoRA Fine-Tuning"
+version = "0.0.2"
+description = "A package for finetuning vision models."
 authors = [
     { name = "Pritesh Raj", email = "priteshraj10@gmail.com" }
 ]
