@@ -11,7 +11,7 @@
 <!-- Badges -->
 <p align="center">
   <a href="https://pypi.org/project/langvision/"><img src="https://img.shields.io/pypi/v/langvision.svg" alt="PyPI version"></a>
-  <a href="https://pepy.tech/project/langtrain"><img src="https://pepy.tech/badge/langtrain" alt="Downloads"></a>
+  <a href="https://pepy.tech/project/langvision"><img src="https://pepy.tech/badge/langvision" alt="Downloads"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"></a>
   <a href="https://img.shields.io/badge/coverage-90%25-brightgreen" alt="Coverage"> <img src="https://img.shields.io/badge/coverage-90%25-brightgreen"/></a>
   <a href="https://img.shields.io/badge/python-3.8%2B-blue" alt="Python Version"> <img src="https://img.shields.io/badge/python-3.8%2B-blue"/></a>
@@ -38,7 +38,7 @@
 - [Showcase](#-showcase)
 - [Getting Started](#-getting-started)
 - [Supported Python Versions](#-supported-python-versions)
-- [Why Langtrain?](#-why-langtrain)
+- [Why langvision?](#-why-langvision)
 - [Architecture Overview](#-architecture-overview)
 - [Core Modules](#-core-modules)
 - [Performance & Efficiency](#-performance--efficiency)
@@ -75,7 +75,7 @@
 
 ## 🚀 Showcase
 
-**langtrain** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. Whether you're working on image classification, visual question answering, or custom vision tasks, langtrain provides the tools you need for parameter-efficient model adaptation.
+**langvision** is a modular, research-friendly framework for building and fine-tuning Vision Large Language Models (LLMs) with efficient Low-Rank Adaptation (LoRA) support. Whether you're working on image classification, visual question answering, or custom vision tasks, langvision provides the tools you need for parameter-efficient model adaptation.
 
 ---
 
@@ -112,7 +112,7 @@ with torch.no_grad():
     print('Output shape:', out.shape)
 ```
 
-For advanced usage, CLI details, and more, see the [Documentation](docs/index.md) and [src/langtrain/cli/finetune.py](src/langtrain/cli/finetune.py).
+For advanced usage, CLI details, and more, see the [Documentation](docs/index.md) and [src/langvision/cli/finetune.py](src/langvision/cli/finetune.py).
 
 ---
 
@@ -121,7 +121,7 @@ For advanced usage, CLI details, and more, see the [Documentation](docs/index.md
 
 ---
 
-## 🧩 Why Langtrain?
+## 🧩 Why langvision?
 
 - **Parameter-efficient fine-tuning**: Plug-and-play LoRA adapters for fast, memory-efficient adaptation with minimal computational overhead
 - **Modular ViT backbone**: Swap or extend components like patch embedding, attention, or MLP heads with ease
@@ -133,7 +133,7 @@ For advanced usage, CLI details, and more, see the [Documentation](docs/index.md
 
 ## 🏗️ Architecture Overview
 
-langtrain is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters strategically injected into attention and MLP layers for efficient fine-tuning. This approach allows you to adapt large pre-trained models using only a fraction of the original parameters.
+langvision is built around a modular Vision Transformer (ViT) backbone, with LoRA adapters strategically injected into attention and MLP layers for efficient fine-tuning. This approach allows you to adapt large pre-trained models using only a fraction of the original parameters.
 
 ### Model Data Flow
 
@@ -294,7 +294,7 @@ pytest tests/integration/
 pytest tests/benchmarks/
 
 # All tests with coverage
-pytest tests/ --cov=langtrain --cov-report=html
+pytest tests/ --cov=langvision --cov-report=html
 ```
 
 ### Code Quality Tools
@@ -349,14 +349,14 @@ model.finetune(
 ---
 
 ## 🧩 Extending the Framework
-- Add new datasets in `src/langtrain/data/datasets.py`
-- Add new callbacks in `src/langtrain/callbacks/`
-- Add new models in `src/langtrain/models/`
-- Add new CLI tools in `src/langtrain/cli/`
+- Add new datasets in `src/langvision/data/datasets.py`
+- Add new callbacks in `src/langvision/callbacks/`
+- Add new models in `src/langvision/models/`
+- Add new CLI tools in `src/langvision/cli/`
 
 ## 📖 Documentation
 - See code comments and docstrings for details on each module.
-- For advanced usage, see the `src/langtrain/cli/finetune.py` script.
+- For advanced usage, see the `src/langvision/cli/finetune.py` script.
 
 ## 🤝 Contributing
 We welcome contributions from the community! Here's how you can get involved:
@@ -371,8 +371,8 @@ We welcome contributions from the community! Here's how you can get involved:
 ### Development Setup
 ```bash
 # Clone and setup development environment
-git clone https://github.com/langtrain-ai/langtrain.git
-cd langtrain
+git clone https://github.com/langtrain-ai/langvision.git
+cd langvision
 pip install -e ".[dev]"
 
 # Install pre-commit hooks
@@ -383,8 +383,8 @@ pytest tests/
 ```
 
 ### Community Resources
-- 💬 [GitHub Discussions](https://github.com/langtrain-ai/langtrain/discussions) - Ask questions and share ideas
-- 🐛 [Issue Tracker](https://github.com/langtrain-ai/langtrain/issues) - Report bugs and request features
+- 💬 [GitHub Discussions](https://github.com/langtrain-ai/langvision/discussions) - Ask questions and share ideas
+- 🐛 [Issue Tracker](https://github.com/langtrain-ai/langvision/issues) - Report bugs and request features
 - 📖 [Contributing Guide](CONTRIBUTING.md) - Detailed contribution guidelines
 - 🎯 [Roadmap](ROADMAP.md) - See what's planned for future releases
 
@@ -400,7 +400,7 @@ If you use langtrain in your research, please cite:
 @software{langtrain2025,
   author = {Pritesh Raj},
   title = {langtrain: Vision LLMs with Efficient LoRA Fine-Tuning},
-  url = {https://github.com/langtrain-ai/langtrain},
+  url = {https://github.com/langtrain-ai/langvision},
   year = {2025},
   version = {1.0.0}
 }
