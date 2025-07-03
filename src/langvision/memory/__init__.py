@@ -1,5 +1,5 @@
 """
-langtrain_ai.memory
+langvision.memory
 
 This package contains memory management utilities and classes.
 """

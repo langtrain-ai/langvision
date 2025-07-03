@@ -1,9 +1,9 @@
 import torch
 import os
 import logging
-from langtrain_ai.callbacks.base import Callback
+from langvision.callbacks.base import Callback
 
-logger = logging.getLogger("langtrain_ai.trainer")
+logger = logging.getLogger("langvision.trainer")
 
 class Trainer:
     """

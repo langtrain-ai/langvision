@@ -1,7 +1,7 @@
 """
-langtrain_ai.utils
+langvision.utils
 
-Utility functions for the langtrain_ai project.
+Utility functions for the langvision project.
 """
 
 import toml

@@ -1,5 +1,5 @@
 import torch
-from langtrain_ai.models.lora import LoRALinear
+from langvision.models.lora import LoRALinear
 
 def test_lora_linear():
     layer = LoRALinear(8, 16, r=2, alpha=1.0)

@@ -1,5 +1,5 @@
 """
-langtrain_ai.filesystem
+langvision.filesystem
 
 This package contains filesystem utility functions and classes.
 """

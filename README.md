@@ -3,14 +3,14 @@
 <hr/>
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/langtrain-ai/langtrain/main/static/langtrain-use-dark.png">
-    <img alt="Langtrain Logo" src="https://raw.githubusercontent.com/langtrain-ai/langtrain/main/static/langtrain-white.png" width="full" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/langtrain-ai/langtrain/main/static/langvision-use-dark.png">
+    <img alt="Langvision Logo" src="https://raw.githubusercontent.com/langtrain-ai/langtrain/main/static/langvision-white.png" width="full" />
   </picture>
 </p>
 
 <!-- Badges -->
 <p align="center">
-  <a href="https://pypi.org/project/langtrain-ai/"><img src="https://img.shields.io/pypi/v/langtrain-ai.svg" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/langvision/"><img src="https://img.shields.io/pypi/v/langvision.svg" alt="PyPI version"></a>
   <a href="https://pepy.tech/project/langtrain"><img src="https://pepy.tech/badge/langtrain" alt="Downloads"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"></a>
   <a href="https://img.shields.io/badge/coverage-90%25-brightgreen" alt="Coverage"> <img src="https://img.shields.io/badge/coverage-90%25-brightgreen"/></a>
@@ -84,13 +84,13 @@
 Here's a minimal example to get you up and running:
 
 ```bash
-pip install langtrain-ai
+pip install langvision
 ```
 
 ```python
 import torch
-from langtrain_ai.models.vision_transformer import VisionTransformer
-from langtrain_ai.utils.config import default_config
+from langvision.models.vision_transformer import VisionTransformer
+from langvision.utils.config import default_config
 
 # Create model
 x = torch.randn(2, 3, 224, 224)
@@ -317,8 +317,8 @@ bandit -r src/
 
 ### Image Classification
 ```python
-from langtrain_ai import VisionTransformer
-from langtrain_ai.datasets import CIFAR10Dataset
+from langvision import VisionTransformer
+from langvision.datasets import CIFAR10Dataset
 
 # Load pre-trained model
 model = VisionTransformer.from_pretrained("vit_base_patch16_224")
@@ -330,7 +330,7 @@ model.finetune(dataset, epochs=10, lora_rank=16)
 
 ### Custom Dataset
 ```python
-from langtrain_ai.datasets import ImageFolderDataset
+from langvision.datasets import ImageFolderDataset
 
 # Your custom dataset
 dataset = ImageFolderDataset(

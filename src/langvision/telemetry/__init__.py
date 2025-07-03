@@ -1,5 +1,5 @@
 """
-langtrain_ai.telemetry
+langvision.telemetry
 
 This package contains telemetry and logging utilities.
 """

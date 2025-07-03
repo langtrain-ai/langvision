@@ -1,5 +1,5 @@
 """
-langtrain_ai.config
+langvision.config
 
 This package contains configuration management utilities and classes.
 """

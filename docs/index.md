@@ -1,9 +1,9 @@
-# langtrain Documentation
+# langvision Documentation
 
-Welcome to the langtrain documentation!
+Welcome to the langvision documentation!
 
 ## Overview
-langtrain is a modular framework for Vision LLMs with LoRA fine-tuning and a unified model zoo for open-source visual models.
+langvision is a modular framework for Vision LLMs with LoRA fine-tuning and a unified model zoo for open-source visual models.
 
 ## Contents
 - [Getting Started](../README.md)

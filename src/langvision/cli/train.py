@@ -1,8 +1,8 @@
 import argparse
 import torch
-from langtrain_ai.models.vision_transformer import VisionTransformer
-from langtrain_ai.utils.config import default_config
-from langtrain_ai.utils.data import get_preprocessing
+from langvision.models.vision_transformer import VisionTransformer
+from langvision.utils.config import default_config
+from langvision.utils.data import get_preprocessing
 from torchvision import datasets
 from torch.utils.data import DataLoader
 import os

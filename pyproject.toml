@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "langtrain-ai"
-version = "0.0.3"
+name = "langvision"
+version = "0.0.1"
 description = "Vision LLMs with Efficient LoRA Fine-Tuning"
 authors = [
     { name = "Pritesh Raj", email = "priteshraj10@gmail.com" }
@@ -29,7 +29,7 @@ Source = "https://github.com/langtrain-ai/langtrain"
 Tracker = "https://github.com/langtrain-ai/langtrain/issues"
 
 [project.scripts]
-langtrain-ai-finetune = "langtrain_ai.cli.finetune:main"
+langvision-finetune = "langvision.cli.finetune:main"
 
 [bumpver]
 current_version = "0.1.10"

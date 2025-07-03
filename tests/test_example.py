@@ -1,8 +1,8 @@
-from langtrain_ai.example import hello, get_version
+from langvision.example import hello, get_version
 
 def test_hello():
     assert hello("World") == "Hello, World!"
-    assert hello("Langtrain") == "Hello, Langtrain!"
+    assert hello("Langvision") == "Hello, Langvision!"
 
 def test_get_version():
     version = get_version()

@@ -1,5 +1,5 @@
 """
-langtrain_ai.sync
+langvision.sync
 
 This package contains synchronization utilities and classes.
 """

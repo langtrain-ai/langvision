@@ -4,12 +4,12 @@ import logging
 import os
 import random
 import numpy as np
-from langtrain_ai.models.vision_transformer import VisionTransformer
-from langtrain_ai.data.datasets import get_dataset
-from langtrain_ai.training.trainer import Trainer
-from langtrain_ai.callbacks.early_stopping import EarlyStopping
-from langtrain_ai.utils.device import get_device
-from langtrain_ai.utils.cuda import setup_cuda
+from langvision.models.vision_transformer import VisionTransformer
+from langvision.data.datasets import get_dataset
+from langvision.training.trainer import Trainer
+from langvision.callbacks.early_stopping import EarlyStopping
+from langvision.utils.device import get_device
+from langvision.utils.cuda import setup_cuda
 
 
 def set_seed(seed: int) -> None:
