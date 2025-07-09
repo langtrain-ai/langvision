@@ -51,6 +51,7 @@
 - [License](#license)
 - [Citation](#citation)
 - [Acknowledgements](#acknowledgements)
+- [Advanced LLM Concepts](#advanced-llm-concepts)
 
 ---
 
@@ -329,3 +330,19 @@ We thank the following projects and communities:
   <b>Made in India 🇮🇳 with ❤️ by the langtrain team</b><br/>
   <i>Star ⭐ this repo if you find it useful!</i>
 </p>
+
+## Advanced LLM Concepts
+
+This library is designed to be extensible with advanced concepts in large language models (LLMs) and explainable AI, including:
+
+- **RLHF**: Reinforcement Learning from Human Feedback
+- **CoT**: Chain-of-Thought
+- **CCoT**: Contrastive Chain-of-Thought
+- **GRPO**: Generalized Reinforcement Policy Optimization
+- **RLVR**: Reinforcement Learning with Value Ranking
+- **DPO**: Direct Preference Optimization
+- **PPO**: Proximal Policy Optimization
+- **LIME**: Local Interpretable Model-agnostic Explanations
+- **SHAP**: SHapley Additive exPlanations
+
+See the [`src/langvision/concepts/`](src/langvision/concepts/) directory for modularized explanations and stubs for each concept. These serve as a foundation for future development and integration into the library's training and evaluation workflows.

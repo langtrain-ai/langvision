@@ -15,6 +15,7 @@ from .models.lora import LoRALinear, LoRAConfig
 from .utils.config import Config, default_config
 from .training.trainer import Trainer
 from .data.datasets import ImageDataset, CIFAR10Dataset, ImageFolderDataset
+from .concepts import RLHF, CoT, CCoT, GRPO, RLVR, DPO, PPO, LIME, SHAP
 
 # Version info
 __all__ = [
