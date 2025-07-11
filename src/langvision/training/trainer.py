@@ -13,8 +13,13 @@ class Trainer:
     - Callbacks
     - Distributed/multi-GPU (use torch.nn.parallel.DistributedDataParallel)
     - TPU (use torch_xla)
+
+    Integration points for advanced LLM concepts:
+    - RLHF: Use RLHF-based feedback in the training loop
+    - PPO/DPO/GRPO/RLVR: Use RL-based optimization for policy/model updates
+    - LIME/SHAP: Use for model interpretability during/after training
     """
-    def __init__(self, model, optimizer, criterion, scheduler=None, scaler=None, callbacks=None, device='cpu'):
+    def __init__(self, model, optimizer, criterion, scheduler=None, scaler=None, callbacks=None, device='cpu', rlhf=None, ppo=None, dpo=None):
         self.model = model
         self.optimizer = optimizer
         self.criterion = criterion
@@ -22,6 +27,9 @@ class Trainer:
         self.scaler = scaler
         self.callbacks = callbacks or []
         self.device = device
+        self.rlhf = rlhf  # RLHF integration (optional)
+        self.ppo = ppo    # PPO integration (optional)
+        self.dpo = dpo    # DPO integration (optional)
         # GPU optimization
         if device.type == 'cuda':
             torch.backends.cudnn.benchmark = True
@@ -40,6 +48,18 @@ class Trainer:
                 imgs = imgs.to(self.device, non_blocking=True)
                 labels = labels.to(self.device, non_blocking=True)
                 self.optimizer.zero_grad()
+                # RLHF integration example (stub)
+                if self.rlhf is not None:
+                    # TODO: Use self.rlhf.train(data, feedback) for RLHF-based updates
+                    pass
+                # PPO integration example (stub)
+                if self.ppo is not None:
+                    # TODO: Use self.ppo.step(state, action, reward) for PPO-based updates
+                    pass
+                # DPO integration example (stub)
+                if self.dpo is not None:
+                    # TODO: Use self.dpo.optimize_with_preferences(preferences) for DPO-based updates
+                    pass
                 if self.scaler:
                     with torch.cuda.amp.autocast():
                         outputs = self.model(imgs)
