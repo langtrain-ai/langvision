@@ -23,7 +23,7 @@ def set_seed(seed: int) -> None:
 
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for fine-tuning."""
-    parser = argparse.ArgumentParser(description='Fine-tune VisionTransformer with LoRA')
+    parser = argparse.ArgumentParser(description='Fine-tune VisionTransformer with LoRA and advanced LLM concepts')
     # Data
     parser.add_argument('--dataset', type=str, default='cifar10', choices=['cifar10', 'cifar100'], help='Dataset to use')
     parser.add_argument('--data_dir', type=str, default='./data', help='Dataset directory')
@@ -64,6 +64,14 @@ def parse_args() -> argparse.Namespace:
     # Misc
     parser.add_argument('--seed', type=int, default=42, help='Random seed for reproducibility')
     parser.add_argument('--log_level', type=str, default='info', help='Logging level (debug, info, warning, error)')
+    # Advanced LLM concepts
+    parser.add_argument('--rlhf', action='store_true', help='Use RLHF (Reinforcement Learning from Human Feedback)')
+    parser.add_argument('--ppo', action='store_true', help='Use PPO (Proximal Policy Optimization)')
+    parser.add_argument('--dpo', action='store_true', help='Use DPO (Direct Preference Optimization)')
+    parser.add_argument('--lime', action='store_true', help='Use LIME for model explainability')
+    parser.add_argument('--shap', action='store_true', help='Use SHAP for model explainability')
+    parser.add_argument('--cot', action='store_true', help='Use Chain-of-Thought (CoT) prompt generation')
+    parser.add_argument('--ccot', action='store_true', help='Use Contrastive Chain-of-Thought (CCoT)')
     return parser.parse_args()
 
 
@@ -76,12 +84,11 @@ def setup_logging(log_level: str) -> None:
 
 
 def main() -> None:
-    """Main function for fine-tuning VisionTransformer with LoRA."""
+    """Main function for fine-tuning VisionTransformer with LoRA and advanced LLM concepts."""
     args = parse_args()
     setup_logging(args.log_level)
     logger = logging.getLogger(__name__)
-    logger.info(f"Using device: {args.device}")
-
+    logger.info("[STEP 1] Loading dataset...")
     setup_cuda(seed=args.seed, deterministic=args.cuda_deterministic, benchmark=args.cuda_benchmark, max_split_size_mb=args.cuda_max_split_size_mb)
     set_seed(args.seed)
 
@@ -95,6 +102,7 @@ def main() -> None:
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
+    logger.info("[STEP 2] Initializing model...")
     # Model
     try:
         model = VisionTransformer(
@@ -116,6 +124,7 @@ def main() -> None:
         logger.error(f"Failed to initialize model: {e}")
         return
 
+    logger.info("[STEP 3] Setting up optimizer and scheduler...")
     # Optimizer
     lora_params = [p for n, p in model.named_parameters() if 'lora' in n and p.requires_grad]
     if args.optimizer == 'adam':
@@ -125,7 +134,6 @@ def main() -> None:
     else:
         optimizer = torch.optim.SGD(lora_params, lr=args.lr, momentum=0.9, weight_decay=args.weight_decay)
 
-    # Scheduler
     if args.scheduler == 'cosine':
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
     else:
@@ -134,11 +142,64 @@ def main() -> None:
     criterion = torch.nn.CrossEntropyLoss()
     scaler = torch.cuda.amp.GradScaler() if args.device == 'cuda' else None
 
+    logger.info("[STEP 4] Setting up trainer...")
     # Callbacks
     callbacks = []
     if args.early_stopping:
         callbacks.append(EarlyStopping(patience=args.patience))
 
+    # Advanced LLM concept objects
+    rlhf = None
+    ppo = None
+    dpo = None
+    lime = None
+    shap = None
+    cot = None
+    ccot = None
+    if args.rlhf:
+        from langvision.concepts.rlhf import RLHF
+        class SimpleRLHF(RLHF):
+            def train(self, model, data, feedback_fn, optimizer):
+                super().train(model, data, feedback_fn, optimizer)
+        rlhf = SimpleRLHF()
+    if args.ppo:
+        from langvision.concepts.ppo import PPO
+        class SimplePPO(PPO):
+            def step(self, policy, old_log_probs, states, actions, rewards, optimizer):
+                super().step(policy, old_log_probs, states, actions, rewards, optimizer)
+        ppo = SimplePPO()
+    if args.dpo:
+        from langvision.concepts.dpo import DPO
+        class SimpleDPO(DPO):
+            def optimize_with_preferences(self, model, preferences, optimizer):
+                super().optimize_with_preferences(model, preferences, optimizer)
+        dpo = SimpleDPO()
+    if args.lime:
+        from langvision.concepts.lime import LIME
+        class SimpleLIME(LIME):
+            def explain(self, model, input_data):
+                return super().explain(model, input_data)
+        lime = SimpleLIME()
+    if args.shap:
+        from langvision.concepts.shap import SHAP
+        class SimpleSHAP(SHAP):
+            def explain(self, model, input_data):
+                return super().explain(model, input_data)
+        shap = SimpleSHAP()
+    if args.cot:
+        from langvision.concepts.cot import CoT
+        class SimpleCoT(CoT):
+            def generate_chain(self, prompt):
+                return super().generate_chain(prompt)
+        cot = SimpleCoT()
+    if args.ccot:
+        from langvision.concepts.ccot import CCoT
+        class SimpleCCoT(CCoT):
+            def contrastive_train(self, positive_chains, negative_chains):
+                super().contrastive_train(positive_chains, negative_chains)
+        ccot = SimpleCCoT()
+
+    logger.info("[STEP 5] (Optional) Loading checkpoint if provided...")
     # Trainer
     trainer = Trainer(
         model=model,
@@ -148,6 +209,9 @@ def main() -> None:
         scaler=scaler,
         callbacks=callbacks,
         device=args.device,
+        rlhf=rlhf,
+        ppo=ppo,
+        dpo=dpo,
     )
 
     # Optionally resume
@@ -162,20 +226,61 @@ def main() -> None:
         logger.info(f"Resumed from {args.resume} at epoch {start_epoch}")
 
     if args.eval_only:
+        logger.info("[STEP 6] Running evaluation only...")
         val_loss, val_acc = trainer.evaluate(val_loader)
         logger.info(f"Eval Loss: {val_loss:.4f}, Eval Acc: {val_acc:.4f}")
         return
 
-    # Training
-    best_acc = trainer.fit(
-        train_loader,
-        val_loader,
-        epochs=args.epochs,
-        start_epoch=start_epoch,
-        best_acc=best_acc,
-        checkpoint_path=os.path.join(args.output_dir, args.save_name),
-    )
-    logger.info(f"Best validation accuracy: {best_acc:.4f}")
+    logger.info("[STEP 6] Starting training...")
+    # Training with per-epoch progress
+    for epoch in range(start_epoch, args.epochs):
+        logger.info(f"  [Epoch {epoch+1}/{args.epochs}] Starting epoch...")
+        best_acc = trainer.fit(
+            train_loader,
+            val_loader,
+            epochs=epoch+1,
+            start_epoch=epoch,
+            best_acc=best_acc,
+            checkpoint_path=os.path.join(args.output_dir, args.save_name),
+        )
+        logger.info(f"  [Epoch {epoch+1}/{args.epochs}] Done. Best validation accuracy so far: {best_acc:.4f}")
+    logger.info(f"[STEP 7] Training complete. Best validation accuracy: {best_acc:.4f}")
+
+    # Example: Use RLHF, PPO, DPO, LIME, SHAP, CoT, CCoT in training
+    if rlhf is not None:
+        logger.info("[STEP 8] Applying RLHF...")
+        def feedback_fn(output):
+            return 1.0 if output.sum().item() > 0 else -1.0
+        rlhf.train(model, [torch.randn(3) for _ in range(10)], feedback_fn, optimizer)
+    if ppo is not None:
+        logger.info("[STEP 9] Applying PPO...")
+        import torch
+        policy = model
+        old_log_probs = torch.zeros(10)
+        states = torch.randn(10, 3)
+        actions = torch.randint(0, args.num_classes, (10,))
+        rewards = torch.randn(10)
+        ppo.step(policy, old_log_probs, states, actions, rewards, optimizer)
+    if dpo is not None:
+        logger.info("[STEP 10] Applying DPO...")
+        preferences = [(torch.randn(3), 1.0), (torch.randn(3), -1.0)]
+        dpo.optimize_with_preferences(model, preferences, optimizer)
+    if lime is not None:
+        logger.info("[STEP 11] Running LIME explainability...")
+        lime_explanation = lime.explain(model, [[0.5, 1.0, 2.0], [1.0, 2.0, 3.0]])
+        logger.info(f"LIME explanation: {lime_explanation}")
+    if shap is not None:
+        logger.info("[STEP 12] Running SHAP explainability...")
+        shap_explanation = shap.explain(model, [[0.5, 1.0, 2.0], [1.0, 2.0, 3.0]])
+        logger.info(f"SHAP explanation: {shap_explanation}")
+    if cot is not None:
+        logger.info("[STEP 13] Generating Chain-of-Thought...")
+        chain = cot.generate_chain("What is 2 + 2?")
+        logger.info(f"CoT chain: {chain}")
+    if ccot is not None:
+        logger.info("[STEP 14] Running Contrastive Chain-of-Thought...")
+        ccot.contrastive_train([['Step 1: Think', 'Step 2: Solve']], [['Step 1: Guess', 'Step 2: Wrong']])
+    logger.info("[COMPLETE] All steps finished.")
 
 if __name__ == '__main__':
     main() 
