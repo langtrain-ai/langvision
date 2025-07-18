@@ -18,11 +18,46 @@
   <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
 </p>
 
-<p align="center">
-  <b>Langvision is a Python package for fine-tuning vision models on image data using LoRA.</b><br/>
-  <span style="font-size:1.1em"><i>Provides modular components for adapting vision models to various computer vision tasks.</i></span>
-</p>
-<hr/>
+---
+
+## 🚀 Installation
+
+> **Requirements:**  
+> - Python 3.8 or newer  
+> - [PyTorch](https://pytorch.org/get-started/locally/) (CPU or GPU)
+
+**Install the latest release from PyPI:**
+
+```bash
+pip install langvision
+```
+
+[![PyPI version](https://img.shields.io/pypi/v/langvision.svg?label=View%20on%20PyPI)](https://pypi.org/project/langvision/)
+
+**Optional installs:**
+
+- For development:
+  ```bash
+  pip install langvision[dev]
+  ```
+- For documentation:
+  ```bash
+  pip install langvision[docs]
+  ```
+- For examples and notebooks:
+  ```bash
+  pip install langvision[examples]
+  ```
+- For GPU (CUDA 11.3+):
+  ```bash
+  pip install langvision[gpu]
+  ```
+
+**Troubleshooting:**
+- For GPU support, ensure you have the correct CUDA version and install PyTorch as per [official instructions](https://pytorch.org/get-started/locally/).
+- If you encounter issues, see [Troubleshooting](docs/troubleshooting.md) or [open an issue](https://github.com/langtrain-ai/langtrain/issues).
+
+---
 
 ## Quick Links
 - [Documentation](docs/index.md)
@@ -80,6 +115,33 @@ Install:
 
 ```bash
 pip install langvision
+```
+
+### CLI Usage
+
+After installation, you can use the unified CLI:
+
+```bash
+langvision train --help
+langvision finetune --help
+```
+
+Example training:
+
+```bash
+langvision train --dataset cifar10 --epochs 5 --batch_size 32
+```
+
+Example fine-tuning:
+
+```bash
+langvision finetune --dataset cifar100 --epochs 10 --lora_r 8 --rlhf
+```
+
+You can also check the version:
+
+```bash
+langvision --version
 ```
 
 Example usage:

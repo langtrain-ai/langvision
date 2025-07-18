@@ -85,6 +85,7 @@ Changelog = "https://github.com/langtrain-ai/langtrain/blob/main/CHANGELOG.md"
 [project.scripts]
 langvision-finetune = "langvision.cli.finetune:main"
 langvision-train = "langvision.cli.train:main"
+langvision = "langvision.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

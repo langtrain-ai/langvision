@@ -9,19 +9,33 @@ import os
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Train or evaluate VisionTransformer with LoRA')
-    parser.add_argument('--dataset', type=str, default='cifar10', choices=['cifar10', 'cifar100'], help='Dataset to use')
-    parser.add_argument('--data_dir', type=str, default='./data', help='Dataset directory')
-    parser.add_argument('--epochs', type=int, default=10)
-    parser.add_argument('--batch_size', type=int, default=64)
-    parser.add_argument('--learning_rate', type=float, default=1e-3)
-    parser.add_argument('--lora_rank', type=int, default=4)
-    parser.add_argument('--lora_alpha', type=float, default=1.0)
-    parser.add_argument('--lora_dropout', type=float, default=0.1)
-    parser.add_argument('--output_dir', type=str, default='./checkpoints')
-    parser.add_argument('--eval', action='store_true', help='Run evaluation only')
-    parser.add_argument('--export', action='store_true', help='Export model for inference')
-    parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu')
+    parser = argparse.ArgumentParser(
+        description='Train or evaluate VisionTransformer with LoRA',
+        epilog='''\nExamples:\n  langvision train --dataset cifar10 --epochs 5\n  langvision train --dataset cifar100 --lora_rank 8 --eval\n''',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    # Data
+    data_group = parser.add_argument_group('Data')
+    data_group.add_argument('--dataset', type=str, default='cifar10', choices=['cifar10', 'cifar100'], help='Dataset to use')
+    data_group.add_argument('--data_dir', type=str, default='./data', help='Dataset directory')
+    # Training
+    train_group = parser.add_argument_group('Training')
+    train_group.add_argument('--epochs', type=int, default=10, help='Number of training epochs')
+    train_group.add_argument('--batch_size', type=int, default=64, help='Batch size for training')
+    train_group.add_argument('--learning_rate', type=float, default=1e-3, help='Learning rate')
+    # LoRA
+    lora_group = parser.add_argument_group('LoRA')
+    lora_group.add_argument('--lora_rank', type=int, default=4, help='LoRA rank (low-rank adaptation)')
+    lora_group.add_argument('--lora_alpha', type=float, default=1.0, help='LoRA alpha scaling')
+    lora_group.add_argument('--lora_dropout', type=float, default=0.1, help='LoRA dropout rate')
+    # Output
+    output_group = parser.add_argument_group('Output')
+    output_group.add_argument('--output_dir', type=str, default='./checkpoints', help='Directory to save checkpoints')
+    # Misc
+    misc_group = parser.add_argument_group('Misc')
+    misc_group.add_argument('--eval', action='store_true', help='Run evaluation only (no training)')
+    misc_group.add_argument('--export', action='store_true', help='Export model for inference')
+    misc_group.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu', help='Device to use (cuda or cpu)')
     return parser.parse_args()
 
 
