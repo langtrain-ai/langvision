@@ -1,6 +1,9 @@
 import torch
 import torch.nn as nn
-from langchain.models.lora import LoRALinear
+import torch.nn.functional as F
+from typing import Optional, Tuple
+import math
+from ..models.lora import LoRALinear, LoRAConfig
 
 class Attention(nn.Module):
     def __init__(self, dim, num_heads=8, lora_config=None):
