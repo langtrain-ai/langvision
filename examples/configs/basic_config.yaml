@@ -1,0 +1,34 @@
+# Basic Configuration for Langvision
+# This is a simple configuration file for training Vision Transformers with LoRA
+
+model:
+  name: "vit_base"
+  img_size: 224
+  patch_size: 16
+  num_classes: 10
+  embed_dim: 768
+  depth: 12
+  num_heads: 12
+  mlp_ratio: 4.0
+
+data:
+  dataset: "cifar10"
+  data_dir: "./data"
+  batch_size: 64
+  num_workers: 2
+
+training:
+  epochs: 10
+  learning_rate: 0.001
+  optimizer: "adam"
+  weight_decay: 0.01
+  scheduler: "cosine"
+
+lora:
+  rank: 4
+  alpha: 1.0
+  dropout: 0.1
+
+output:
+  output_dir: "./outputs"
+  save_name: "vit_lora_best.pth"

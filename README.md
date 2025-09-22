@@ -119,28 +119,46 @@ pip install langvision
 
 ### CLI Usage
 
-After installation, you can use the unified CLI:
+After installation, you can use the comprehensive CLI:
 
 ```bash
+# Show all available commands
+langvision --help
+
+# Training commands
 langvision train --help
 langvision finetune --help
+
+# Model management
+langvision evaluate --help
+langvision export --help
+langvision model-zoo --help
+langvision config --help
 ```
 
-Example training:
+**Quick Examples:**
 
 ```bash
+# Train a model
 langvision train --dataset cifar10 --epochs 5 --batch_size 32
-```
 
-Example fine-tuning:
-
-```bash
+# Fine-tune with advanced features
 langvision finetune --dataset cifar100 --epochs 10 --lora_r 8 --rlhf
-```
 
-You can also check the version:
+# Evaluate a trained model
+langvision evaluate --checkpoint model.pth --dataset cifar10
 
-```bash
+# Export to ONNX
+langvision export --checkpoint model.pth --format onnx --output model.onnx
+
+# Browse model zoo
+langvision model-zoo list
+langvision model-zoo download vit_base_patch16_224
+
+# Create configuration
+langvision config create --template advanced --output my_config.yaml
+
+# Check version
 langvision --version
 ```
 

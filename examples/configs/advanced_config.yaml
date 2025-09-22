@@ -1,0 +1,66 @@
+# Advanced Configuration for Langvision
+# This is an advanced configuration file with more options and optimizations
+
+model:
+  name: "vit_base"
+  img_size: 224
+  patch_size: 16
+  num_classes: 100
+  embed_dim: 768
+  depth: 12
+  num_heads: 12
+  mlp_ratio: 4.0
+  dropout: 0.1
+  attention_dropout: 0.1
+
+data:
+  dataset: "cifar100"
+  data_dir: "./data"
+  batch_size: 128
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+
+training:
+  epochs: 50
+  learning_rate: 0.0001
+  optimizer: "adamw"
+  weight_decay: 0.05
+  scheduler: "cosine"
+  warmup_epochs: 5
+  min_lr: 0.000001
+  gradient_clip: 1.0
+
+lora:
+  rank: 16
+  alpha: 32
+  dropout: 0.1
+  target_modules: ["attention.qkv", "attention.proj", "mlp.fc1", "mlp.fc2"]
+
+callbacks:
+  early_stopping:
+    enabled: true
+    patience: 10
+    min_delta: 0.001
+  checkpointing:
+    enabled: true
+    save_best: true
+    save_last: true
+
+logging:
+  level: "info"
+  log_interval: 100
+  save_interval: 5
+
+output:
+  output_dir: "./outputs"
+  save_name: "vit_lora_advanced.pth"
+
+device:
+  device: "cuda"
+  cuda_deterministic: false
+  cuda_benchmark: true
+
+misc:
+  seed: 42
+  log_level: "info"

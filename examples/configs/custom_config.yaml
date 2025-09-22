@@ -1,0 +1,76 @@
+# Custom Configuration for Langvision
+# This is a custom configuration file for specific use cases
+
+model:
+  name: "vit_large"
+  img_size: 384
+  patch_size: 16
+  num_classes: 1000
+  embed_dim: 1024
+  depth: 24
+  num_heads: 16
+  mlp_ratio: 4.0
+  dropout: 0.1
+  attention_dropout: 0.1
+
+data:
+  dataset: "imagenet"
+  data_dir: "/path/to/imagenet"
+  batch_size: 32
+  num_workers: 8
+  pin_memory: true
+  persistent_workers: true
+
+training:
+  epochs: 100
+  learning_rate: 0.00005
+  optimizer: "adamw"
+  weight_decay: 0.1
+  scheduler: "cosine"
+  warmup_epochs: 10
+  min_lr: 0.000001
+  gradient_clip: 1.0
+
+lora:
+  rank: 32
+  alpha: 64
+  dropout: 0.1
+  target_modules: ["attention.qkv", "attention.proj", "mlp.fc1", "mlp.fc2"]
+
+callbacks:
+  early_stopping:
+    enabled: true
+    patience: 20
+    min_delta: 0.001
+  checkpointing:
+    enabled: true
+    save_best: true
+    save_last: true
+
+logging:
+  level: "info"
+  log_interval: 50
+  save_interval: 10
+
+output:
+  output_dir: "./outputs"
+  save_name: "vit_large_lora_custom.pth"
+
+device:
+  device: "cuda"
+  cuda_deterministic: false
+  cuda_benchmark: true
+
+misc:
+  seed: 42
+  log_level: "info"
+
+# Advanced LLM Concepts
+advanced_concepts:
+  rlhf: true
+  ppo: false
+  dpo: false
+  lime: true
+  shap: true
+  cot: false
+  ccot: false

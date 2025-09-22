@@ -1,0 +1,11 @@
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+- jekyll-remote-theme
+
+title: Langvision
+description: Efficient Vision LLMs with LoRA Fine-Tuning
+show_downloads: true
+github:
+  repository_url: https://github.com/langtrain-ai/langvision
+  zip_url: https://github.com/langtrain-ai/langvision/zipball/main
+  tar_url: https://github.com/langtrain-ai/langvision/tarball/main
