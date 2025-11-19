@@ -16,8 +16,9 @@ import torch.onnx
 try:
     from langvision.models.vision_transformer import VisionTransformer
 except ImportError as e:
-    print(f"Error importing langvision modules: {e}")
-    print("Please ensure langvision is properly installed.")
+    print(f"❌ Error importing langvision modules: {e}")
+    print("Please ensure langvision is properly installed:")
+    print("  pip install langvision")
     sys.exit(1)
 
 

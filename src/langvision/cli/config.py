@@ -15,8 +15,9 @@ from pathlib import Path
 try:
     from langvision.utils.config import default_config, load_config, save_config
 except ImportError as e:
-    print(f"Error importing langvision modules: {e}")
-    print("Please ensure langvision is properly installed.")
+    print(f"❌ Error importing langvision modules: {e}")
+    print("Please ensure langvision is properly installed:")
+    print("  pip install langvision")
     sys.exit(1)
 
 

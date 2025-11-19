@@ -19,8 +19,9 @@ try:
     from langvision.utils.device import setup_cuda, set_seed
     from langvision.training.trainer import Trainer
 except ImportError as e:
-    print(f"Error importing langvision modules: {e}")
-    print("Please ensure langvision is properly installed.")
+    print(f"❌ Error importing langvision modules: {e}")
+    print("Please ensure langvision is properly installed:")
+    print("  pip install langvision")
     sys.exit(1)
 
 

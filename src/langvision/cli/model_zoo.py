@@ -13,8 +13,9 @@ from pathlib import Path
 try:
     from langvision.model_zoo import get_available_models, get_model_info, download_model
 except ImportError as e:
-    print(f"Error importing langvision modules: {e}")
-    print("Please ensure langvision is properly installed.")
+    print(f"❌ Error importing langvision modules: {e}")
+    print("Please ensure langvision is properly installed:")
+    print("  pip install langvision")
     sys.exit(1)
 
 
