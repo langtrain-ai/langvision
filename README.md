@@ -1,6 +1,10 @@
 <div align="center">
 
-# 🔬 Langvision
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/langtrain-ai/langvision/main/static/langvision-white.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/langtrain-ai/langvision/main/static/langvision-black.png">
+  <img alt="Langvision Logo" src="https://raw.githubusercontent.com/langtrain-ai/langvision/main/static/langvision-black.png" width="400">
+</picture>
 
 ### Efficient LoRA Fine-Tuning for Vision LLMs
 
