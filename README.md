@@ -94,21 +94,44 @@ pip install langvision
 ---
 
 ## Features
-- LoRA adapters for efficient fine-tuning
-- Modular Vision Transformer (ViT) backbone
-- Model zoo for vision models
-- Configurable and extensible codebase
-- Checkpointing and resume
-- Mixed precision and distributed training
-- Metrics and visualization tools
-- CLI for training and evaluation
-- Callback support (early stopping, logging, etc.)
+
+### 🧠 Vision LLM Fine-Tuning
+- **LoRA/QLoRA adapters** for memory-efficient fine-tuning
+- Support for **LLaVA, BLIP-2, Qwen-VL, InternVL, CogVLM, Phi-3 Vision** and more
+- Pre-configured LoRA target modules for each model family
+- Mixed precision (FP16/BF16) and gradient checkpointing
+
+### 🔧 Training & Optimization
+- Advanced training with **RLHF, DPO, PPO** support
+- Configurable learning rate schedulers and optimizers
+- Automatic checkpointing and training resume
+- Distributed training across multiple GPUs
+
+### 📦 Model Zoo
+- **14+ Vision LLM models** ready for fine-tuning
+- Vision encoders: CLIP, SigLIP, EVA-CLIP
+- Recommended LoRA configs for each model
+- Easy model download and management
+
+### 🛠️ Developer Experience  
+- Comprehensive CLI with intuitive commands
+- YAML/JSON configuration system
+- Callback support (early stopping, logging, W&B)
+- Export to ONNX and TorchScript
 
 ---
 
-## Showcase
+## Supported Vision LLMs
 
-Langvision is intended for building and fine-tuning vision models with LoRA. It can be used for image classification, visual question answering, and other computer vision tasks.
+| Model Family | Models | Use Cases |
+|--------------|--------|-----------|
+| **LLaVA** | 1.6-7B, 1.6-13B | Visual QA, Image Captioning, Visual Reasoning |
+| **Qwen-VL** | Qwen-VL-Chat, Qwen2-VL-7B | Multilingual VQA, Document OCR, Video |
+| **BLIP-2** | Flan-T5-XL, OPT-6.7B | Image Captioning, Zero-shot Classification |
+| **InternVL** | InternVL2-8B | OCR, Chart/Document Understanding |
+| **CogVLM** | CogVLM2-Llama3 | GUI Agent, Fine-grained Recognition |
+| **Phi-3 Vision** | 128K context | Long-context Vision, Document Understanding |
+| **IDEFICS** | IDEFICS2-8B | Visual QA, Multi-image Understanding |
 
 ---
 
@@ -120,6 +143,21 @@ Install:
 pip install langvision
 ```
 
+### Authentication
+
+Langvision requires an API key. Get yours at [langtrain.xyz](https://langtrain.xyz):
+
+```bash
+# Login with your API key
+langvision auth login
+
+# Check authentication status
+langvision auth status
+
+# View usage
+langvision auth usage
+```
+
 ### CLI Usage
 
 After installation, you can use the comprehensive CLI:
@@ -128,66 +166,78 @@ After installation, you can use the comprehensive CLI:
 # Show all available commands
 langvision --help
 
-# Training commands
-langvision train --help
-langvision finetune --help
+# Authentication
+langvision auth login
 
 # Model management
-langvision evaluate --help
-langvision export --help
-langvision model-zoo --help
-langvision config --help
+langvision model-zoo list              # List all Vision LLMs
+langvision model-zoo list --type vlm   # List Vision-Language models only
+langvision model-zoo info llava-v1.6-7b    # Get model details
 ```
 
-**Quick Examples:**
+**Fine-tuning Vision LLMs:**
 
 ```bash
-# Train a model
-langvision train --dataset cifar10 --epochs 5 --batch_size 32
+# Fine-tune LLaVA for Visual QA
+langvision finetune \
+  --model llava-v1.6-7b \
+  --dataset your_vqa_dataset \
+  --lora_r 64 \
+  --epochs 3 \
+  --batch_size 4
 
-# Fine-tune with advanced features
-langvision finetune --dataset cifar100 --epochs 10 --lora_r 8 --rlhf
+# Fine-tune Qwen-VL with DPO
+langvision finetune \
+  --model qwen2-vl-7b \
+  --dataset preference_data \
+  --method dpo \
+  --lora_r 64
 
-# Evaluate a trained model
-langvision evaluate --checkpoint model.pth --dataset cifar10
+# Fine-tune BLIP-2 for image captioning
+langvision finetune \
+  --model blip2-flan-t5-xl \
+  --dataset coco_captions \
+  --lora_r 32 \
+  --epochs 5
+
+# Evaluate a fine-tuned model
+langvision evaluate --checkpoint ./outputs/llava-lora --dataset vqav2
 
 # Export to ONNX
-langvision export --checkpoint model.pth --format onnx --output model.onnx
-
-# Browse model zoo
-langvision model-zoo list
-langvision model-zoo download vit_base_patch16_224
-
-# Create configuration
-langvision config create --template advanced --output my_config.yaml
-
-# Check version
-langvision --version
+langvision export --checkpoint ./outputs/llava-lora --format onnx
 ```
 
-Example usage:
+### Python API
 
 ```python
-import torch
-from langvision.models.vision_transformer import VisionTransformer
-from langvision.utils.config import default_config
+from langvision import ModelZoo, AdvancedTrainer, TrainingConfig
+from langvision.models.lora import LoRAConfig
 
-x = torch.randn(2, 3, 224, 224)
-model = VisionTransformer(
-    img_size=default_config['img_size'],
-    patch_size=default_config['patch_size'],
-    in_chans=default_config['in_chans'],
-    num_classes=default_config['num_classes'],
-    embed_dim=default_config['embed_dim'],
-    depth=default_config['depth'],
-    num_heads=default_config['num_heads'],
-    mlp_ratio=default_config['mlp_ratio'],
-    lora_config=default_config['lora'],
+# Browse available Vision LLMs
+zoo = ModelZoo()
+vlm_models = zoo.list_vlm_models()
+for model in vlm_models:
+    print(f"{model['name']}: {model['description']}")
+
+# Get recommended LoRA config for a model
+lora_config = zoo.get_lora_config("llava-v1.6-7b")
+print(f"LoRA rank: {lora_config['r']}")
+print(f"Target modules: {lora_config['target_modules']}")
+
+# Fine-tune with custom config
+config = TrainingConfig(
+    model_name="llava-v1.6-7b",
+    dataset_path="./my_vqa_data",
+    lora_r=64,
+    lora_alpha=128,
+    learning_rate=2e-4,
+    epochs=3,
+    batch_size=4,
+    gradient_checkpointing=True,
 )
 
-with torch.no_grad():
-    out = model(x)
-    print('Output shape:', out.shape)
+trainer = AdvancedTrainer(config)
+trainer.train()
 ```
 
 See the [Documentation](docs/index.md) and [src/langvision/cli/finetune.py](src/langvision/cli/finetune.py) for more details.
