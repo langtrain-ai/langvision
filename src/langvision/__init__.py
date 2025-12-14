@@ -76,7 +76,7 @@ PACKAGE_METADATA = {
     "description": "Modular Vision LLMs with Efficient LoRA Fine-Tuning",
     "author": __author__,
     "email": __email__,
-    "url": "https://github.com/langtrain-ai/langtrain",
+    "url": "https://github.com/langtrain-ai/langvision",
     "license": "MIT",
     "python_requires": ">=3.8",
 } 
