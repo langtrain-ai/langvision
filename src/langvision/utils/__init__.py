@@ -8,6 +8,19 @@ import toml
 import os
 import re
 
+# Hardware detection
+from .hardware import (
+    HardwareDetector,
+    HardwareConfig,
+    AcceleratorType,
+    GPUInfo,
+    TPUInfo,
+    get_device,
+    get_optimal_dtype,
+    auto_configure_training,
+    print_hardware_info,
+)
+
 def get_project_version():
     """Return the current project version from pyproject.toml as a string."""
     pyproject_path = os.path.abspath(
@@ -22,4 +35,19 @@ def parse_version(version_str):
     if not match:
         raise ValueError(f"Version '{version_str}' is not in a recognized format (X.Y.Z or X.Y.Z<suffix>)")
     major, minor, patch, suffix = match.groups()
-    return int(major), int(minor), int(patch), suffix 
+    return int(major), int(minor), int(patch), suffix
+
+__all__ = [
+    "get_project_version",
+    "parse_version",
+    # Hardware
+    "HardwareDetector",
+    "HardwareConfig", 
+    "AcceleratorType",
+    "GPUInfo",
+    "TPUInfo",
+    "get_device",
+    "get_optimal_dtype",
+    "auto_configure_training",
+    "print_hardware_info",
+] 
