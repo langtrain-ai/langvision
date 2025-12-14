@@ -6,6 +6,7 @@ Provides efficient training utilities for Vision LLM fine-tuning:
 - Memory-efficient training with gradient checkpointing
 - Fast attention implementations
 - Complete FastTrainer for end-to-end training
+- VisionLLMFineTuner for optimal fine-tuning
 """
 
 # Fast LoRA - Optimized Low-Rank Adaptation
@@ -49,6 +50,17 @@ from .fast_trainer import (
     create_fast_trainer,
 )
 
+# Optimal Fine-Tuner (best-in-class)
+from .optimal_finetuner import (
+    VisionLLMFineTuner,
+    OptimalFineTuneConfig,
+    FineTuningMethod,
+    TrainingObjective,
+    NEFTuneEmbedding,
+    PagedAdamW,
+    create_optimal_finetuner,
+)
+
 # Legacy imports for backward compatibility
 from .trainer import Trainer
 from .advanced_trainer import AdvancedTrainer, TrainingConfig
@@ -83,6 +95,14 @@ __all__ = [
     "FastTrainer",
     "SequencePacker",
     "create_fast_trainer",
+    # Optimal Fine-Tuner
+    "VisionLLMFineTuner",
+    "OptimalFineTuneConfig",
+    "FineTuningMethod",
+    "TrainingObjective",
+    "NEFTuneEmbedding",
+    "PagedAdamW",
+    "create_optimal_finetuner",
     # Legacy
     "Trainer",
     "AdvancedTrainer",
