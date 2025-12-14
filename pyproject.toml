@@ -74,12 +74,12 @@ gpu = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/langtrain-ai/langtrain"
-Documentation = "https://github.com/langtrain-ai/langtrain/tree/main/docs"
-Repository = "https://github.com/langtrain-ai/langtrain"
-"Bug Tracker" = "https://github.com/langtrain-ai/langtrain/issues"
-"Source Code" = "https://github.com/langtrain-ai/langtrain"
-Changelog = "https://github.com/langtrain-ai/langtrain/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/langtrain-ai/langvision"
+Documentation = "https://github.com/langtrain-ai/langvision/tree/main/docs"
+Repository = "https://github.com/langtrain-ai/langvision"
+"Bug Tracker" = "https://github.com/langtrain-ai/langvision/issues"
+"Source Code" = "https://github.com/langtrain-ai/langvision"
+Changelog = "https://github.com/langtrain-ai/langvision/blob/main/CHANGELOG.md"
 
 [project.scripts]
 langvision-finetune = "langvision.cli.finetune:main"

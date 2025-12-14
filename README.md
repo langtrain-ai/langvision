@@ -1,22 +1,21 @@
-# Langvision: Efficient LoRA Fine-Tuning for Vision LLMs
+<div align="center">
 
-<hr/>
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/langtrain-ai/langtrain/main/static/langvision-use-dark.png">
-    <img alt="Langvision Logo" src="https://raw.githubusercontent.com/langtrain-ai/langtrain/main/static/langvision-white.png" width="full" />
-  </picture>
-</p>
+# 🔬 Langvision
 
-<!-- Badges -->
-<p align="center">
-  <a href="https://pypi.org/project/langvision/"><img src="https://img.shields.io/pypi/v/langvision.svg" alt="PyPI version"></a>
-  <a href="https://pepy.tech/project/langvision"><img src="https://pepy.tech/badge/langvision" alt="Downloads"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"></a>
-  <a href="https://img.shields.io/badge/coverage-90%25-brightgreen" alt="Coverage"> <img src="https://img.shields.io/badge/coverage-90%25-brightgreen"/></a>
-  <a href="https://img.shields.io/badge/python-3.8%2B-blue" alt="Python Version"> <img src="https://img.shields.io/badge/python-3.8%2B-blue"/></a>
-  <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
-</p>
+### Efficient LoRA Fine-Tuning for Vision LLMs
+
+[![PyPI version](https://img.shields.io/pypi/v/langvision.svg)](https://pypi.org/project/langvision/)
+[![Downloads](https://pepy.tech/badge/langvision)](https://pepy.tech/project/langvision)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)]()
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue)]()
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+**Fine-tune Vision Transformers with minimal memory footprint using LoRA adapters**
+
+[📦 Installation](#-installation) • [🚀 Quick Start](#getting-started) • [📖 Documentation](docs/index.md) • [🗺️ Roadmap](ROADMAP.md)
+
+</div>
 
 ---
 
@@ -55,7 +54,7 @@ pip install langvision
 
 **Troubleshooting:**
 - For GPU support, ensure you have the correct CUDA version and install PyTorch as per [official instructions](https://pytorch.org/get-started/locally/).
-- If you encounter issues, see [Troubleshooting](docs/troubleshooting.md) or [open an issue](https://github.com/langtrain-ai/langtrain/issues).
+- If you encounter issues, see [Troubleshooting](docs/troubleshooting.md) or [open an issue](https://github.com/langtrain-ai/langvision/issues).
 
 ---
 
@@ -389,12 +388,12 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 If you use langvision in your research, please cite:
 
 ```bibtex
-@software{langtrain2025,
+@software{langvision2025,
   author = {Pritesh Raj},
-  title = {langtrain: Vision LLMs with Efficient LoRA Fine-Tuning},
+  title = {Langvision: Efficient LoRA Fine-Tuning for Vision LLMs},
   url = {https://github.com/langtrain-ai/langvision},
   year = {2025},
-  version = {1.0.0}
+  version = {0.1.0}
 }
 ```
 
