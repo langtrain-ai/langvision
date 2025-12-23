@@ -299,15 +299,56 @@ class LangvisionClient:
         else:
             raise LangvisionAPIError(message, status_code, error_data)
     
-    # ==================== Authentication ====================
+    # ==================== Authentication & Validation ====================
+    
+    def validate(self) -> Dict[str, Any]:
+        """
+        Validate the API key and return plan/feature info.
+        
+        Returns:
+            dict with:
+                - valid: bool
+                - plan: str (free, pro, enterprise)
+                - features: list of feature names
+                - limits: dict of limits
+                - workspace_id: str
+        """
+        if not self.api_key:
+            return {"valid": False, "error": "No API key configured"}
+        
+        try:
+            response = self._request("POST", "auth/api-keys/validate", data={"api_key": self.api_key})
+            return response
+        except Exception as e:
+            return {"valid": False, "error": str(e)}
     
     def validate_api_key(self) -> bool:
-        """Validate the current API key."""
-        try:
-            self._request("GET", "auth/validate")
-            return True
-        except AuthenticationError:
-            return False
+        """Validate the current API key (simple check)."""
+        result = self.validate()
+        return result.get("valid", False)
+    
+    def is_valid(self) -> bool:
+        """Check if API key is valid."""
+        return self.validate_api_key()
+    
+    def get_features(self) -> List[str]:
+        """Get list of available features for current plan."""
+        result = self.validate()
+        return result.get("features", [])
+    
+    def has_feature(self, feature: str) -> bool:
+        """Check if a specific feature is available."""
+        return feature in self.get_features()
+    
+    def get_limits(self) -> Dict[str, int]:
+        """Get current plan limits."""
+        result = self.validate()
+        return result.get("limits", {})
+    
+    def get_plan(self) -> str:
+        """Get current subscription plan name."""
+        result = self.validate()
+        return result.get("plan", "free")
     
     def get_usage(self) -> Dict[str, Any]:
         """Get current usage statistics."""
@@ -319,7 +360,10 @@ class LangvisionClient:
         self,
         model: str,
         dataset_id: str,
+        training_method: str = "qlora",
         config: Optional[Dict[str, Any]] = None,
+        sft_config: Optional[Dict[str, Any]] = None,
+        dpo_config: Optional[Dict[str, Any]] = None,
         **kwargs,
     ) -> JobResult:
         """
@@ -328,7 +372,15 @@ class LangvisionClient:
         Args:
             model: Model name (e.g., "llava-v1.6-7b")
             dataset_id: ID of uploaded dataset
-            config: Training configuration
+            training_method: Training method - one of:
+                - "sft" (Supervised Fine-Tuning)
+                - "dpo" (Direct Preference Optimization)
+                - "rlhf" (Reinforcement Learning from Human Feedback)
+                - "lora" (LoRA adapters)
+                - "qlora" (Quantized LoRA, default)
+            config: Training configuration (epochs, lr, batch_size, etc.)
+            sft_config: SFT-specific config
+            dpo_config: DPO-specific config
             **kwargs: Additional training options
         
         Returns:
@@ -340,8 +392,14 @@ class LangvisionClient:
         payload = {
             "model": model,
             "dataset_id": dataset_id,
+            "training_method": training_method,
             "config": training_config,
         }
+        
+        if sft_config and training_method == "sft":
+            payload["sft_config"] = sft_config
+        if dpo_config and training_method == "dpo":
+            payload["dpo_config"] = dpo_config
         
         response = self._request("POST", "training/jobs", data=payload)
         
