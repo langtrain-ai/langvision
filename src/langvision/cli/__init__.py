@@ -120,7 +120,7 @@ def check_auth_and_usage(command_type: str = "general") -> bool:
         print(f"    {c.RED}│{c.RESET}  You've used {usage['commands_used']}/{usage['commands_limit']} commands this month.             {c.RED}│{c.RESET}")
         print(f"    {c.RED}│{c.RESET}                                                          {c.RED}│{c.RESET}")
         print(f"    {c.RED}│{c.RESET}  Upgrade your plan to continue:                          {c.RED}│{c.RESET}")
-        print(f"    {c.RED}│{c.RESET}    {c.CYAN}https://langtrain.xyz/pricing{c.RESET}                        {c.RED}│{c.RESET}")
+        print(f"    {c.RED}│{c.RESET}    {c.CYAN}https://billing.langtrain.xyz{c.RESET}                        {c.RED}│{c.RESET}")
         print(f"    {c.RED}│{c.RESET}                                                          {c.RED}│{c.RESET}")
         print(f"    {c.RED}╰──────────────────────────────────────────────────────────╯{c.RESET}\n")
         return False

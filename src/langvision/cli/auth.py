@@ -216,7 +216,7 @@ def require_auth(func):
         if not usage["within_limits"]:
             raise UsageLimitError(
                 f"Usage limit exceeded. You've used {usage['commands_used']} commands this month.\n"
-                f"Upgrade your plan at https://langtrain.xyz/pricing"
+                f"Upgrade your plan at https://billing.langtrain.xyz"
             )
         return func(*args, **kwargs)
     return wrapper
