@@ -42,6 +42,7 @@ dependencies = [
     "pillow>=8.3.0",
     "timm>=0.6.0",
     "transformers>=4.20.0",
+    "langtrain-common @ file://../../langtrain-server/langtrain-common"
 ]
 
 [project.optional-dependencies]

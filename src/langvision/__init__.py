@@ -9,6 +9,9 @@ __version__ = "0.1.0"
 __author__ = "Pritesh Raj"
 __email__ = "priteshraj10@gmail.com"
 
+# High-level Facades (Quick Start API)
+from .facade import LoRATrainer, QLoRATrainer, ChatModel
+
 # Core imports for easy access
 from .models.vision_transformer import VisionTransformer
 from .models.lora import LoRALinear, LoRAConfig, AdaLoRALinear, QLoRALinear
@@ -124,6 +127,8 @@ __all__ = [
     "CLIPLoss",
     # Concepts
     "RLHF", "CoT", "CCoT", "GRPO", "RLVR", "DPO", "PPO", "LIME", "SHAP",
+    # Facades
+    "LoRATrainer", "QLoRATrainer", "ChatModel",
 ]
 
 # Optional imports for advanced usage
