@@ -34,6 +34,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          pip install "torch==${{ matrix.torch-version }}" torchvision --index-url https://download.pytorch.org/whl/cpu
+        else
+          pip install "torch==${{ matrix.torch-version }}" torchvision
+        fi
         pip install -r requirements-dev.txt
         pip install -e .
 
