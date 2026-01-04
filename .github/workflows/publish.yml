@@ -38,17 +38,5 @@ jobs:
           git push
           git push --tags
 
-      - name: Build package
-        run: python -m build
-
-      - name: Publish package to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: twine upload dist/*
-
-      - name: Clean dist
-        run: rm -rf dist/*
-
       - name: Show new version
         run: python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])" 
