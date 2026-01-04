@@ -1,19 +1,38 @@
-name: Create GitHub Release on Tag
+name: Publish to PyPI
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  release:
+  build-n-publish:
+    name: Build and publish to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/langvision/
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false 
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install pypa/build
+      run: >-
+        python3 -m pip install build --user
+
+    - name: Build a binary wheel and a source tarball
+      run: >-
+        python3 -m build
+
+    - name: Publish distribution 📦 to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
