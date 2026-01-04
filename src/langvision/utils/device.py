@@ -17,4 +17,16 @@ def get_device(prefer_tpu=True):
     elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
         return torch.device('mps')
     else:
-        return torch.device('cpu') 
+        return torch.device('cpu')
+
+def to_device(data, device: torch.device):
+    """
+    Recursively move tensors to the specified device.
+    """
+    if isinstance(data, torch.Tensor):
+        return data.to(device)
+    elif isinstance(data, (list, tuple)):
+        return type(data)([to_device(item, device) for item in data]) # type: ignore
+    elif isinstance(data, dict):
+        return {k: to_device(v, device) for k, v in data.items()}
+    return data 
