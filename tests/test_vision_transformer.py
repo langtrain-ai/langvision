@@ -26,7 +26,7 @@ class TestVisionTransformer:
             mlp_ratio=sample_config["mlp_ratio"],
             lora_config=sample_config["lora"],
         )
-        
+
         assert isinstance(model, VisionTransformer)
         assert model.num_classes == sample_config["num_classes"]
         assert model.embed_dim == sample_config["embed_dim"]
@@ -35,10 +35,10 @@ class TestVisionTransformer:
         """Test forward pass through the model."""
         model = sample_model
         batch_size = sample_batch.shape[0]
-        
+
         with torch.no_grad():
             output = model(sample_batch)
-        
+
         expected_shape = (batch_size, model.num_classes)
         assert output.shape == expected_shape
         assert not torch.isnan(output).any()
@@ -48,7 +48,7 @@ class TestVisionTransformer:
         """Test that model has trainable parameters."""
         total_params = sum(p.numel() for p in sample_model.parameters())
         trainable_params = sum(p.numel() for p in sample_model.parameters() if p.requires_grad)
-        
+
         assert total_params > 0
         assert trainable_params > 0
         assert trainable_params <= total_params
@@ -66,13 +66,13 @@ class TestVisionTransformer:
             mlp_ratio=sample_config["mlp_ratio"],
             lora_config=sample_config["lora"],
         )
-        
+
         # Check that LoRA layers exist
         lora_layers = []
         for module in model.modules():
             if hasattr(module, 'lora_A') and hasattr(module, 'lora_B'):
                 lora_layers.append(module)
-        
+
         assert len(lora_layers) > 0, "No LoRA layers found in model"
 
     @pytest.mark.parametrize("img_size", [224, 384, 512])
@@ -80,7 +80,7 @@ class TestVisionTransformer:
         """Test model with different input image sizes."""
         config = sample_config.copy()
         config["img_size"] = img_size
-        
+
         model = VisionTransformer(
             img_size=config["img_size"],
             patch_size=config["patch_size"],
@@ -92,13 +92,13 @@ class TestVisionTransformer:
             mlp_ratio=config["mlp_ratio"],
             lora_config=config["lora"],
         )
-        
+
         batch_size = 2
         input_tensor = torch.randn(batch_size, 3, img_size, img_size)
-        
+
         with torch.no_grad():
             output = model(input_tensor)
-        
+
         assert output.shape == (batch_size, config["num_classes"])
 
     def test_gradient_flow(self, sample_model: VisionTransformer, sample_batch: torch.Tensor, sample_labels: torch.Tensor):
@@ -106,44 +106,44 @@ class TestVisionTransformer:
         model = sample_model
         criterion = nn.CrossEntropyLoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
-        
+
         # Forward pass
         output = model(sample_batch)
         loss = criterion(output, sample_labels)
-        
+
         # Backward pass
         loss.backward()
-        
+
         # Check that gradients exist
         has_gradients = False
         for param in model.parameters():
             if param.grad is not None:
                 has_gradients = True
                 break
-        
+
         assert has_gradients, "No gradients found after backward pass"
 
     @pytest.mark.slow
     def test_model_memory_usage(self, sample_model: VisionTransformer, sample_batch: torch.Tensor):
         """Test memory usage during forward pass."""
         model = sample_model
-        
+
         if torch.cuda.is_available():
             model = model.cuda()
             sample_batch = sample_batch.cuda()
-            
+
             # Get initial memory usage
             torch.cuda.empty_cache()
             initial_memory = torch.cuda.memory_allocated()
-            
+
             # Forward pass
             with torch.no_grad():
                 _ = model(sample_batch)
-            
+
             # Check memory usage
             final_memory = torch.cuda.memory_allocated()
             memory_used = final_memory - initial_memory
-            
+
             assert memory_used > 0, "Model should use some GPU memory"
         else:
             # CPU test - just check that it runs without error
@@ -154,11 +154,11 @@ class TestVisionTransformer:
         """Test that model can be saved and loaded."""
         model = sample_model
         save_path = tmp_path / "model.pth"
-        
+
         # Save model
         torch.save(model.state_dict(), save_path)
         assert save_path.exists()
-        
+
         # Load model
         new_model = VisionTransformer(
             img_size=224,
@@ -172,14 +172,14 @@ class TestVisionTransformer:
             lora_config={"rank": 16, "alpha": 32, "dropout": 0.1},
         )
         new_model.load_state_dict(torch.load(save_path))
-        
+
         # Test that loaded model produces same output
         test_input = torch.randn(1, 3, 224, 224)
-        
+
         with torch.no_grad():
             original_output = model(test_input)
             loaded_output = new_model(test_input)
-        
+
         torch.testing.assert_close(original_output, loaded_output)
 
     def test_invalid_config(self):
