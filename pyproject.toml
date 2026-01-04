@@ -42,7 +42,6 @@ dependencies = [
     "pillow>=8.3.0",
     "timm>=0.6.0",
     "transformers>=4.20.0",
-    "langtrain-common>=0.1.0"
 ]
 
 [project.optional-dependencies]
