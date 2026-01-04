@@ -10,9 +10,19 @@
 </p>
 
 <p>
+  <a href="https://www.producthunt.com/products/langtrain-2" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1049974&theme=light" alt="Product Hunt" width="200" /></a>
+</p>
+
+<p>
   <a href="https://pypi.org/project/langvision/"><img src="https://img.shields.io/pypi/v/langvision.svg?style=for-the-badge&logo=pypi&logoColor=white" alt="PyPI" /></a>
-  <a href="https://pepy.tech/project/langvision"><img src="https://img.shields.io/badge/downloads-1k%2B-brightgreen?style=for-the-badge" alt="Downloads" /></a>
+  <a href="https://pepy.tech/project/langvision"><img src="https://img.shields.io/pepy/dt/langvision?style=for-the-badge&logo=python&logoColor=white&label=downloads" alt="Downloads" /></a>
   <a href="https://github.com/langtrain-ai/langvision/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="License" /></a>
+</p>
+
+<p>
+  <a href="https://github.com/langtrain-ai/langvision/stargazers"><img src="https://img.shields.io/github/stars/langtrain-ai/langvision?style=for-the-badge&logo=github&color=gold" alt="GitHub Stars" /></a>
+  <a href="https://discord.gg/langtrain"><img src="https://img.shields.io/badge/Discord-Join%20Us-7289da?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" /></a>
+  <a href="https://twitter.com/langtrainai"><img src="https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter" /></a>
 </p>
 
 <p>
