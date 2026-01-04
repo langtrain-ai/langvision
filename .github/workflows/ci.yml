@@ -14,6 +14,9 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         python-version: ["3.10", "3.11"]
         torch-version: ["2.1.0"]
+        include:
+          - torch-version: "2.1.0"
+            torchvision-version: "0.16.0"
 
     steps:
     - uses: actions/checkout@v4
@@ -33,11 +36,14 @@ jobs:
 
     - name: Install dependencies
       run: |
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          brew install libomp
+        fi
         python -m pip install --upgrade pip
         if [ "$RUNNER_OS" == "Linux" ]; then
-          pip install "torch==${{ matrix.torch-version }}" torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install "torch==${{ matrix.torch-version }}" "torchvision==${{ matrix.torchvision-version }}" --index-url https://download.pytorch.org/whl/cpu
         else
-          pip install "torch==${{ matrix.torch-version }}" torchvision
+          pip install "torch==${{ matrix.torch-version }}" "torchvision==${{ matrix.torchvision-version }}"
         fi
         pip install -r requirements-dev.txt
         pip install -e .
