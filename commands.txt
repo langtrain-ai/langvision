@@ -1,5 +1,0 @@
-change pyproject.toml file
-version= +1
-
-rm -rf dist/
-python -m build

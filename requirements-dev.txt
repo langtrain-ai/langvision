@@ -34,4 +34,4 @@ tensorboard>=2.9.0
 wandb>=0.13.0
 
 # Include core dependencies
--r requirements.txt 
+-e . 
