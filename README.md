@@ -3,8 +3,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/langtrain-ai/langvision/main/static/langvision-white.png">
-  <img alt="Langvision Logo" src="https://raw.githubusercontent.com/langtrain-ai/langvision/main/static/langvision-black.png" width="400">
+  <source media="(prefers-color-scheme: dark)" srcset="static/langvision-white.png">
+  <img alt="Langvision Logo" src="static/langvision-black.png" width="400">
 </picture>
 
 ### Fine-tune Vision LLMs (LLaVA, Qwen-VL) in minutes
