@@ -21,6 +21,10 @@ from .modules import NEFTuneEmbedding
 # Re-export main class
 from .finetuner import VisionLLMFineTuner
 
+def create_optimal_finetuner(config: OptimalFineTuneConfig) -> VisionLLMFineTuner:
+    """Factory function to create an optimal fine-tuner instance."""
+    return VisionLLMFineTuner(config)
+
 __all__ = [
     "OptimalFineTuneConfig",
     "FineTuningMethod",
@@ -28,4 +32,5 @@ __all__ = [
     "PagedAdamW",
     "NEFTuneEmbedding",
     "VisionLLMFineTuner",
+    "create_optimal_finetuner",
 ]
