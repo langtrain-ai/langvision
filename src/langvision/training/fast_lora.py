@@ -148,6 +148,23 @@ class FastLoRALinear(nn.Module):
             # Inference mode: use merged weights
             return F.linear(x, self._merged_weight, self.bias)
         
+        if not self.config.use_dora and x.is_cuda:
+            from langvision.training.acceleration import Accelerator
+            accelerator = Accelerator()
+            
+            if accelerator.is_available():
+                # Fused forward pass (Base + LoRA)
+                out = accelerator.fused_lora(
+                    x, self.weight, 
+                    self.lora_A, self.lora_B, 
+                    self.scaling
+                )
+                
+                if self.bias is not None:
+                    out += self.bias
+                    
+                return out
+
         # Training mode: compute base and LoRA separately
         base_output = F.linear(x, self.weight, self.bias)
         

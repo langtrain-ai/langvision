@@ -79,8 +79,26 @@ class FastAttention(nn.Module):
             batch_size, _, seq_len, _ = query.shape
             reshape_output = False
         
-        # Choose attention implementation based on sequence length
-        if seq_len <= 2048:
+        # Reshape back if needed
+        reshape_output = reshape_output
+        """
+        We inject the accelerator check here.
+        """
+        from langvision.training.acceleration import Accelerator
+        accelerator = Accelerator()
+        
+        # Try fused kernel first
+        fused_output = None
+        if accelerator.is_available() and query.is_cuda:
+            fused_output = accelerator.fused_attention(
+                query, key, value, 
+                is_causal=self.is_causal, 
+                scale=self.scale
+            )
+            
+        if fused_output is not None:
+            output = fused_output
+        elif seq_len <= 2048:
             output = self._standard_attention(query, key, value, attention_mask)
         else:
             output = self._chunked_attention(query, key, value, attention_mask)
