@@ -196,4 +196,3 @@ class TestVisionTransformer:
                 mlp_ratio=4.0,
                 lora_config={"rank": 16, "alpha": 32, "dropout": 0.1},
             )
- 

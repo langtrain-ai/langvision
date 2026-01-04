@@ -32,6 +32,14 @@ def main():
     
     # 5. Push
     print("⬆️ Pushing changes...")
+    
+    # Configure remote with PAT if available (to trigger downstream workflows)
+    gh_token = os.environ.get("GH_PAT")
+    if gh_token:
+        # get current remote url to extract owner/repo
+        # assuming origin is https://github.com/owner/repo.git
+        run_command(f'git remote set-url origin https://{gh_token}@github.com/langtrain-ai/langvision.git')
+    
     run_command("git push")
     run_command("git push --tags")
 
