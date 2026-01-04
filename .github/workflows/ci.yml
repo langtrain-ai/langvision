@@ -38,9 +38,6 @@ jobs:
     - name: Verify Installation
       run: |
         python -c "import langvision; print('Successfully imported langvision')"
-
-
-
   docs:
     needs: test
     runs-on: ubuntu-latest
