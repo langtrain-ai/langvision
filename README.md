@@ -1,4 +1,4 @@
-# Langvision: Efficient Vision LLM Fine-Tuning
+# Langvision: Efficient Vision LLM Fine-Tuning (Latest)
 
 <div align="center">
 
