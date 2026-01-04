@@ -22,31 +22,7 @@ clean:  ## Clean build artifacts
 	find . -type d -name __pycache__ -delete
 	find . -type f -name "*.pyc" -delete
 
-test:  ## Run tests
-	pytest tests/ -v
-
-test-cov:  ## Run tests with coverage
-	pytest tests/ --cov=langvision --cov-report=html --cov-report=term
-
-test-fast:  ## Run fast tests only
-	pytest tests/ -v -m "not slow"
-
-lint:  ## Run linting
-	flake8 src/ tests/
-	black --check src/ tests/
-	isort --check-only src/ tests/
-
-format:  ## Format code
-	black src/ tests/
-	isort src/ tests/
-
-type-check:  ## Run type checking
-	mypy src/
-
-security:  ## Run security checks
-	bandit -r src/
-
-quality: lint type-check security  ## Run all quality checks
+# Removed QA targets (test, lint, etc.) per user request to simplify stack.
 
 build:  ## Build the package
 	python -m build

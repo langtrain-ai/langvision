@@ -35,29 +35,9 @@ jobs:
         pip install -r requirements-dev.txt
         pip install -e .
 
-    - name: Run linting
+    - name: Verify Installation
       run: |
-        make lint
-
-    - name: Run type checking
-      run: |
-        make type-check
-
-    - name: Run security checks
-      run: |
-        make security
-
-    - name: Run tests
-      run: |
-        make test-fast
-
-    - name: Upload coverage to Codecov
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
+        python -c "import langvision; print('Successfully imported langvision')"
 
 
 
