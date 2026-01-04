@@ -1,4 +1,4 @@
-# Langvision: Efficient Vision LLM Fine-Tuning (Latest)
+# Langvision: LoRA Fine-Tuning for Vision LLMs
 
 <div align="center">
 
