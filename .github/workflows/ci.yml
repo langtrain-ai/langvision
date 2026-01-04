@@ -38,6 +38,7 @@ jobs:
           brew install libomp
         fi
         python -m pip install --upgrade pip
+        pip install "torch==2.1.0" "torchvision==0.16.0"
         pip install -r requirements-dev.txt
         pip install -e .
 
