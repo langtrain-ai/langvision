@@ -195,4 +195,5 @@ class TestVisionTransformer:
                 num_heads=13,  # Should be divisible by embed_dim
                 mlp_ratio=4.0,
                 lora_config={"rank": 16, "alpha": 32, "dropout": 0.1},
-            ) 
+            )
+ 
