@@ -13,7 +13,7 @@ jobs:
     name: Build and publish to PyPI
     runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: "pypi"
       url: https://pypi.org/project/langvision/
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
