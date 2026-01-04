@@ -20,16 +20,10 @@
 </p>
 
 <p>
-  <a href="https://github.com/langtrain-ai/langvision/stargazers"><img src="https://img.shields.io/github/stars/langtrain-ai/langvision?style=for-the-badge&logo=github&color=gold" alt="GitHub Stars" /></a>
-  <a href="https://discord.gg/langtrain"><img src="https://img.shields.io/badge/Discord-Join%20Us-7289da?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" /></a>
-  <a href="https://twitter.com/langtrainai"><img src="https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter" /></a>
-</p>
-
-<p>
   <a href="#quick-start">Quick Start</a> •
   <a href="#features">Features</a> •
   <a href="#supported-models">Models</a> •
-  <a href="https://langtrain.xyz/docs">Documentation</a>
+  <a href="https://langtrain.xyz/docs">Docs</a>
 </p>
 
 </div>
