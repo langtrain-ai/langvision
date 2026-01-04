@@ -33,9 +33,6 @@ jobs:
 
     - name: Install dependencies
       run: |
-        if [ "$RUNNER_OS" == "macOS" ]; then
-          brew install libomp
-        fi
         python -m pip install --upgrade pip
         pip install -r requirements-dev.txt
         pip install -e .
