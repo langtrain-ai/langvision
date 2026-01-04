@@ -47,8 +47,10 @@ jobs:
       run: |
         make security
 
-    - name: Run tests
+    - name: Debug CI
       run: |
+        python -c "import langvision; print('Import successful')"
+        pytest --collect-only
         make test-fast
 
     - name: Upload coverage to Codecov
