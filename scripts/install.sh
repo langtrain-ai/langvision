@@ -66,13 +66,24 @@ echo -e "${ACCENT}• Configuring shell access...${RESET}"
 ln -sf "$VENV_DIR/bin/langvision" "$BIN_DIR/langvision"
 
 # 6. Path Check
+# 6. Path Check
 if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
     echo -e "\n${WARNING}Warning: $BIN_DIR is not in your PATH.${RESET}"
     echo -e "Add this to your shell config file (.zshrc or .bashrc):"
     echo -e "${MUTED}export PATH=\"\$HOME/.local/bin:\$PATH\"${RESET}"
 fi
 
+# 7. Liveness Check
+echo -e "\n${MUTED}• Verifying installation...${RESET}"
+if "$BIN_DIR/langvision" --version > /dev/null 2>&1; then
+    VERSION=$("$BIN_DIR/langvision" --version)
+    echo -e "${SUCCESS}✔ Verified ${VERSION}${RESET}"
+else
+    echo -e "${WARNING}⚠ Could not execute langvision binary. Please check permissions.${RESET}"
+fi
+
 echo -e "\n${SUCCESS}✔ Installation Complete${RESET}"
+
 echo -e "\n${PRIMARY}Get started:${RESET}"
 echo -e "  ${SECONDARY}langvision auth login${RESET}   Connect your account"
 echo -e "  ${SECONDARY}langvision model-zoo${RESET}    Browse available models\n"
