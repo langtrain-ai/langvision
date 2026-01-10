@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langvision"
-version = "0.1.44"
+version = "0.1.45"
 description = "Efficient LoRA Fine-Tuning for Vision LLMs with advanced CLI and model zoo"
 authors = [
     { name = "Pritesh Raj", email = "priteshraj10@gmail.com" }
@@ -173,7 +173,7 @@ exclude_lines = [
 ]
 
 [bumpver]
-current_version = "0.1.44"
+current_version = "0.1.45"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "Bump version: {old_version} → {new_version}"
 tag_message = "v{new_version}"
