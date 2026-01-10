@@ -45,27 +45,34 @@ console = Console(theme=langtrain_theme)
 
 def print_banner():
     """Print the unified Langtrain banner."""
-    header = Text(justify="center")
+    header = Table.grid(padding=1, expand=True)
+    header.add_column(justify="right", ratio=1)
+    header.add_column(justify="left", ratio=2)
     
-    ascii_art = """
-    __                      __           _     
-   / /   ____ _____  ____ _/ /__________(_)___ 
-  / /   / __ `/ __ \/ __ `/ __/ ___/ __ / / __ \\
- / /___/ /_/ / / / / /_/ / /_/ /  / /_/ / / / / /
-/_____/\__,_/_/ /_/\__, /\__/_/   \__,_/_/_/ /_/ 
-                  /____/                         
+    # Custom L Logo
+    logo_art = """
+      __
+     /  /
+    /  /
+   /  /    __
+  /  /    /  /
+ /__/    /__/
 """
-    header.append(ascii_art, style="bold primary")
-    header.append("\nLangvision", style="bold secondary")
-    header.append(f" v{__version__}", style="dim white")
-    header.append("\nEnterprise Vision Modules", style="muted")
+    
+    # Text side
+    text_content = Text()
+    text_content.append("\nLangvision", style="bold primary")
+    text_content.append(f"\nv{__version__}", style="dim white")
+    text_content.append("\nEnterprise Vision Modules", style="muted")
+    
+    header.add_row(Text(logo_art, style="primary"), text_content)
     
     console.print(Panel(
         header,
         style="primary",
         border_style="primary",
         box=box.ROUNDED,
-        padding=(1, 2)
+        padding=(0, 2)
     ))
 
 def print_auth_status():
