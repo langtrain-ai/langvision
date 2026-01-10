@@ -50,13 +50,19 @@ def print_banner():
     header.add_column(justify="left", ratio=2)
     
     # Custom L Logo
-    logo_art = """
-      __
-     /  /
-    /  /
-   /  /    __
-  /  /    /  /
- /__/    /__/
+    logo_art = r"""
+            ________
+           /       /
+          /       /
+         /       /
+        /       /
+       /       /
+      /       /
+     /       /      ________
+    /       /      /       /
+   /_______/      /_______/
+
+   L A N G T R A I N
 """
     
     # Text side

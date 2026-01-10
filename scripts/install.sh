@@ -19,12 +19,20 @@ INSTALL_DIR="$HOME/.langtrain/langvision"
 BIN_DIR="$HOME/.local/bin"
 VENV_DIR="$INSTALL_DIR/venv"
 
-echo -e "${PRIMARY}      __           ${RESET}"
-echo -e "${PRIMARY}     /  /          ${RESET}"
-echo -e "${PRIMARY}    /  /           ${RESET}"
-echo -e "${PRIMARY}   /  /    __      ${RESET}"
-echo -e "${PRIMARY}  /  /    /  /     ${RESET}"
-echo -e "${PRIMARY} /__/    /__/      ${RESET}"
+cat << "EOF"
+            ________
+           /       /
+          /       /
+         /       /
+        /       /
+       /       /
+      /       /
+     /       /      ________
+    /       /      /       /
+   /_______/      /_______/
+
+   L A N G T R A I N
+EOF
 echo -e "\n${SECONDARY}Langvision Installer${RESET}"
 echo -e "${MUTED}Setting up your computer vision workspace...${RESET}\n"
 
