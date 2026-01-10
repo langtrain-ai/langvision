@@ -180,13 +180,40 @@ def verify_api_key(api_key: str, force_refresh: bool = False) -> Dict[str, Any]:
              return {"valid": True, "plan": "pro", "offline_mode": True}
         raise AuthenticationError("Could not verify API key (Offline).")
 
+def get_remote_usage(api_key: str) -> Dict[str, Any]:
+    """Fetch usage stats from API."""
+    if not REQUESTS_AVAILABLE: return {}
+    try:
+        headers = {"Authorization": f"Bearer {api_key}"}
+        resp = requests.get(USAGE_ENDPOINT, headers=headers, timeout=5)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return {}
+
 def check_usage(api_key: str) -> Dict[str, Any]:
     """Check current usage against limits."""
     user_data = verify_api_key(api_key)
-    usage = user_data.get("usage", {})
     
-    tokens_used = usage.get("tokens_used", 0)
-    tokens_limit = usage.get("tokens_limit", 100000)
+    # Fetch real usage if online
+    remote_data = get_remote_usage(api_key)
+    
+    tokens_used = 0
+    tokens_limit = 100000
+    plan = user_data.get("plan", "free")
+    
+    if remote_data and "quotas" in remote_data:
+        quotas = remote_data["quotas"]
+        if "tokens" in quotas:
+            t = quotas["tokens"]
+            tokens_used = t.get("current_usage", 0)
+            tokens_limit = t.get("limit", 100000)
+        plan = remote_data.get("plan", plan)
+    else:
+        usage = user_data.get("usage", {})
+        tokens_used = usage.get("tokens_used", 0)
+        tokens_limit = usage.get("tokens_limit", 100000)
     
     if tokens_used >= tokens_limit:
         raise UsageLimitError(f"Limit exceeded: {tokens_used}/{tokens_limit}")
@@ -195,8 +222,42 @@ def check_usage(api_key: str) -> Dict[str, Any]:
         "tokens_used": tokens_used,
         "tokens_limit": tokens_limit,
         "tokens_remaining": tokens_limit - tokens_used,
-        "plan": user_data.get("plan", "free")
+        "plan": plan
     }
+
+def print_usage_info():
+    """Print current usage information."""
+    api_key = get_api_key()
+    if not api_key: return
+    
+    try:
+        usage = check_usage(api_key)
+        
+        if RICH_AVAILABLE:
+            from rich.table import Table
+            table = Table(title="Langvision Usage", box=box.ROUNDED, title_style="bold cyan")
+            table.add_column("Metric", style="cyan", no_wrap=True)
+            table.add_column("Used", style="white", justify="right")
+            table.add_column("Limit", style="white", justify="right")
+            table.add_column("Remaining", style="green", justify="right")
+            
+            table.add_row(
+                "Vision Tokens",
+                f"{usage['tokens_used']:,}",
+                f"{usage['tokens_limit']:,}",
+                f"{usage['tokens_remaining']:,}"
+            )
+            
+            console.print()
+            console.print(f"[dim]Plan:[/] [bold]{usage['plan'].title()}[/]")
+            console.print(table)
+            console.print()
+        else:
+             print(f"Plan: {usage['plan']}")
+             print(f"Tokens: {usage['tokens_used']}/{usage['tokens_limit']}")
+
+    except Exception:
+        pass
 
 def interactive_login():
     """Interactive login flow."""
@@ -214,6 +275,7 @@ def interactive_login():
         set_api_key(api_key)
         if RICH_AVAILABLE:
             console.print("[bold green]✓ Authentication successful![/]")
+            print_usage_info()
         return True
     except Exception as e:
         if RICH_AVAILABLE:
