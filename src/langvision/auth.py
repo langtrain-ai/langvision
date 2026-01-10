@@ -31,9 +31,10 @@ except ImportError:
     console = None
 
 # API configuration
-API_BASE_URL = "https://api.langtrain.xyz"
-AUTH_ENDPOINT = f"{API_BASE_URL}/v1/auth/verify"
-USAGE_ENDPOINT = f"{API_BASE_URL}/v1/usage"
+# Allow overriding for local development (e.g. http://localhost:3000)
+API_BASE_URL = os.environ.get("LANGTRAIN_API_URL", "https://api.langtrain.xyz")
+AUTH_ENDPOINT = f"{API_BASE_URL}/api/v1/auth/verify" # Ensure path matches Next.js route
+USAGE_ENDPOINT = f"{API_BASE_URL}/api/v1/usage"
 
 # Config paths
 CONFIG_DIR = Path.home() / ".langvision"
