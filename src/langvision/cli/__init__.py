@@ -269,7 +269,20 @@ def main():
     args = parser.parse_args()
 
     if not args.command:
-        parser.print_help()
+        # Use simple rich help for now, adapting to langvision structure finding
+        console.print(Panel(
+            "Usage: [bold primary]langvision[/] <command> [options]\n\n"
+            "Run [bold white]langvision --help[/] for details.",
+            title="Langvision CLI",
+            border_style="secondary"
+        ))
+        
+        # Or import the new helper if we want full detail:
+        try:
+            from .rich_help import print_rich_help
+            print_rich_help(parser)
+        except ImportError:
+            parser.print_help()
         return
 
     # Auth command doesn't require authentication
@@ -278,38 +291,42 @@ def main():
         return
 
     # All other commands require authentication
-    if args.command == 'train':
-        if not check_auth_and_usage("train"):
-            return
-        sys.argv = [sys.argv[0]] + args.args
-        train_main()
-    elif args.command == 'finetune':
-        if not check_auth_and_usage("finetune"):
-            return
-        sys.argv = [sys.argv[0]] + args.args
-        finetune_main()
-    elif args.command == 'evaluate':
-        if not check_auth_and_usage("evaluate"):
-            return
-        sys.argv = [sys.argv[0]] + args.args
-        evaluate_main()
-    elif args.command == 'export':
-        if not check_auth_and_usage("export"):
-            return
-        sys.argv = [sys.argv[0]] + args.args
-        export_main()
-    elif args.command == 'model-zoo':
-        if not check_auth_and_usage("model-zoo"):
-            return
-        sys.argv = [sys.argv[0]] + args.args
-        model_zoo_main()
-    elif args.command == 'config':
-        if not check_auth_and_usage("config"):
-            return
-        sys.argv = [sys.argv[0]] + args.args
-        config_main()
-    else:
-        parser.print_help()
+    try:
+        if args.command == 'train':
+            if not check_auth_and_usage("train"): return
+            sys.argv = [sys.argv[0]] + args.args
+            train_main()
+        elif args.command == 'finetune':
+            if not check_auth_and_usage("finetune"): return
+            sys.argv = [sys.argv[0]] + args.args
+            finetune_main()
+        elif args.command == 'evaluate':
+            if not check_auth_and_usage("evaluate"): return
+            sys.argv = [sys.argv[0]] + args.args
+            evaluate_main()
+        elif args.command == 'export':
+            if not check_auth_and_usage("export"): return
+            sys.argv = [sys.argv[0]] + args.args
+            export_main()
+        elif args.command == 'model-zoo':
+            if not check_auth_and_usage("model-zoo"): return
+            sys.argv = [sys.argv[0]] + args.args
+            model_zoo_main()
+        elif args.command == 'config':
+            if not check_auth_and_usage("config"): return
+            sys.argv = [sys.argv[0]] + args.args
+            config_main()
+        else:
+            parser.print_help()
+            
+    except KeyboardInterrupt:
+        console.print("\n[warning]⚠ Cancelled by user[/]")
+        sys.exit(130)
+    except Exception as e:
+        console.print(f"\n[bold error]Fatal Error:[/] {e}")
+        import os
+        if os.environ.get("LANGVISION_DEBUG"): raise
+        sys.exit(1)
 
 
 if __name__ == '__main__':
