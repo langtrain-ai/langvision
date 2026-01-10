@@ -32,6 +32,14 @@
 
 ## ⚡ Quick Start
 
+### 1-Click Install (Recommended)
+The fastest way to get started. Installs Langvision in an isolated environment.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/langtrain-ai/langvision/main/scripts/install.sh | bash
+```
+
+### Or using pip
 ```bash
 pip install langvision
 ```
