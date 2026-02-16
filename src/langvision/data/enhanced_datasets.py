@@ -43,6 +43,9 @@ class DatasetConfig:
     text_max_length: int = 77
     text_tokenizer: Optional[str] = None
     
+    # Adaptive Compression / Network Simulation
+    network_profile: Optional[str] = None  # "2g", "3g", "4g", "wifi"
+    
     # Validation settings
     validate_images: bool = True
     min_image_size: Tuple[int, int] = (32, 32)
@@ -392,6 +395,18 @@ class EnhancedImageDataset(Dataset):
                 if self.cache_images:
                     self.image_cache[str(image_path)] = image
             
+            # Apply network simulation (Adaptive Compression)
+            if self.config.network_profile and self.config.network_profile != "wifi":
+                from ..utils.compression import AdaptiveCompressor, NetworkProfile
+                compressor = AdaptiveCompressor()
+                # Cast string to enum if needed
+                try:
+                    profile_enum = NetworkProfile(self.config.network_profile)
+                except ValueError:
+                    profile_enum = NetworkProfile.WIFI
+                
+                image = compressor.optimize_for_network(image, profile_enum)
+
             # Apply transforms
             if self.transform:
                 image = self.transform(image)

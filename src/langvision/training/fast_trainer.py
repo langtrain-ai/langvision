@@ -130,8 +130,9 @@ class FastTrainer:
         self.callbacks = callbacks or []
         
         # Setup device
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        
+        if self.device.type == 'cuda':
+            torch.backends.cudnn.benchmark = True
+            
         # Apply Fast LoRA
         self.lora_config = FastLoRAConfig(
             r=config.lora_r,
@@ -201,12 +202,17 @@ class FastTrainer:
                 {"params": [p for p in self.model.parameters() if p.requires_grad]}
             ]
         
+        # Use fused AdamW if available
+        use_fused = self.device.type == 'cuda' and hasattr(torch.optim.AdamW, '_init_grouped')
+        extra_args = {"fused": True} if use_fused else {}
+        
         self.optimizer = AdamW(
             param_groups,
             lr=self.config.learning_rate,
             betas=(self.config.adam_beta1, self.config.adam_beta2),
             eps=self.config.adam_epsilon,
             weight_decay=self.config.weight_decay,
+            **extra_args
         )
     
     def _get_layer_wise_params(self) -> List[Dict[str, Any]]:
@@ -361,13 +367,20 @@ class FastTrainer:
         
         self.model.train()
         
+        # Determine optimal workers
+        import multiprocessing
+        try:
+            num_workers = min(multiprocessing.cpu_count(), 8)
+        except:
+            num_workers = 4
+
         # Create data loader
         train_loader = torch.utils.data.DataLoader(
             self.train_dataset,
             batch_size=self.config.batch_size,
             shuffle=True,
-            num_workers=4,
-            pin_memory=self.config.use_gradient_checkpointing,
+            num_workers=num_workers,
+            pin_memory=self.device.type == 'cuda',
         )
         
         # Training metrics
