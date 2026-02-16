@@ -195,45 +195,68 @@ class LangvisionClient:
         files: Optional[Dict] = None,
         stream: bool = False,
     ) -> Dict[str, Any]:
-        """Make HTTP request to server."""
+        """Make HTTP request to server with automatic retry on transient errors."""
         url = f"{self.config.api_url}/{endpoint}"
+        retryable_statuses = {429, 500, 502, 503, 504}
+        last_error = None
         
         if HAS_REQUESTS:
             session = self._get_session()
             
-            try:
-                if files:
-                    # Multipart upload
-                    response = session.request(
-                        method,
-                        url,
-                        data=data,
-                        files=files,
-                        params=params,
-                        timeout=self.config.timeout,
-                        stream=stream,
-                    )
-                else:
-                    response = session.request(
-                        method,
-                        url,
-                        json=data,
-                        params=params,
-                        timeout=self.config.timeout,
-                        stream=stream,
-                    )
-                
-                if stream:
-                    return response
-                
-                return self._handle_response(response)
-                
-            except requests.exceptions.Timeout:
-                raise LangvisionAPIError("Request timed out")
-            except requests.exceptions.ConnectionError:
-                raise LangvisionAPIError("Failed to connect to server")
+            for attempt in range(self.config.max_retries):
+                try:
+                    if files:
+                        response = session.request(
+                            method,
+                            url,
+                            data=data,
+                            files=files,
+                            params=params,
+                            timeout=self.config.timeout,
+                            stream=stream,
+                        )
+                    else:
+                        response = session.request(
+                            method,
+                            url,
+                            json=data,
+                            params=params,
+                            timeout=self.config.timeout,
+                            stream=stream,
+                        )
+                    
+                    if response.status_code in retryable_statuses and attempt < self.config.max_retries - 1:
+                        wait = min(2 ** attempt, 8)
+                        logger.warning(f"Retryable error {response.status_code}, retrying in {wait}s (attempt {attempt + 1}/{self.config.max_retries})")
+                        import time
+                        time.sleep(wait)
+                        continue
+                    
+                    if stream:
+                        return response
+                    
+                    return self._handle_response(response)
+                    
+                except requests.exceptions.Timeout:
+                    last_error = LangvisionAPIError("Request timed out")
+                    if attempt < self.config.max_retries - 1:
+                        wait = min(2 ** attempt, 8)
+                        logger.warning(f"Timeout, retrying in {wait}s (attempt {attempt + 1}/{self.config.max_retries})")
+                        import time
+                        time.sleep(wait)
+                        continue
+                except requests.exceptions.ConnectionError:
+                    last_error = LangvisionAPIError("Failed to connect to server")
+                    if attempt < self.config.max_retries - 1:
+                        wait = min(2 ** attempt, 8)
+                        logger.warning(f"Connection error, retrying in {wait}s (attempt {attempt + 1}/{self.config.max_retries})")
+                        import time
+                        time.sleep(wait)
+                        continue
+            
+            raise last_error
         else:
-            # Fallback to urllib
+            # Fallback to urllib (no retry for urllib)
             return self._urllib_request(method, url, data, params)
     
     def _urllib_request(
