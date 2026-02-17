@@ -61,10 +61,6 @@ from .optimal_finetuner import (
     create_optimal_finetuner,
 )
 
-# Legacy imports for backward compatibility
-from .trainer import Trainer
-from .advanced_trainer import AdvancedTrainer, TrainingConfig
-
 __all__ = [
     # Fast LoRA
     "FastLoRAConfig",
@@ -103,8 +99,4 @@ __all__ = [
     "NEFTuneEmbedding",
     "PagedAdamW",
     "create_optimal_finetuner",
-    # Legacy
-    "Trainer",
-    "AdvancedTrainer",
-    "TrainingConfig",
 ]

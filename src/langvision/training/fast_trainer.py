@@ -36,6 +36,8 @@ from .memory_efficient import (
     CPUOffloader,
     estimate_memory_usage,
 )
+from .lisa import LISA
+from .kernels import fused_cross_entropy
 
 
 @dataclass
@@ -58,6 +60,7 @@ class FastTrainerConfig:
     
     # Training settings
     epochs: int = 3
+    max_steps: int = -1
     batch_size: int = 4
     gradient_accumulation_steps: int = 4
     max_seq_length: int = 2048
@@ -70,16 +73,23 @@ class FastTrainerConfig:
     adam_epsilon: float = 1e-8
     max_grad_norm: float = 1.0
     
+    # LISA optimization
+    use_lisa: bool = False
+    lisa_active_layers: int = 2
+    lisa_interval: int = 20
+    
     # Learning rate schedule
     lr_scheduler: str = "cosine"  # cosine, linear, constant, one_cycle
     warmup_ratio: float = 0.03
     warmup_steps: int = 0  # If > 0, overrides warmup_ratio
+    min_lr_ratio: float = 0.1
     
     # Memory optimizations
     use_gradient_checkpointing: bool = True
     gradient_checkpoint_ratio: float = 0.5
     use_cpu_offload: bool = False
     empty_cache_steps: int = 10
+    compile_model: bool = False
     
     # Mixed precision
     use_amp: bool = True
@@ -124,6 +134,7 @@ class FastTrainer:
         eval_dataset=None,
         tokenizer=None,
         callbacks: Optional[List[Callable]] = None,
+        skip_lora: bool = False,
     ):
         self.config = config
         self.tokenizer = tokenizer
@@ -134,18 +145,27 @@ class FastTrainer:
             torch.backends.cudnn.benchmark = True
             
         # Apply Fast LoRA
-        self.lora_config = FastLoRAConfig(
-            r=config.lora_r,
-            lora_alpha=config.lora_alpha,
-            lora_dropout=config.lora_dropout,
-            target_modules=config.target_modules,
-            use_rslora=config.use_rslora,
-            use_dora=config.use_dora,
-            use_gradient_checkpointing=config.use_gradient_checkpointing,
-        )
+        if not skip_lora:
+            self.lora_config = FastLoRAConfig(
+                r=config.lora_r,
+                lora_alpha=config.lora_alpha,
+                lora_dropout=config.lora_dropout,
+                target_modules=config.target_modules,
+                use_rslora=config.use_rslora,
+                use_dora=config.use_dora,
+                use_gradient_checkpointing=config.use_gradient_checkpointing,
+            )
+            
+            self.model = apply_fast_lora(model, self.lora_config)
+            self.model = self.model.to(self.device)
         
-        self.model = apply_fast_lora(model, self.lora_config)
-        self.model = self.model.to(self.device)
+        # Compile model
+        if config.compile_model and hasattr(torch, 'compile'):
+            self.model = torch.compile(self.model)
+
+        else:
+            self.model = model
+
         
         # Setup memory optimizations
         self._setup_memory_optimizations()
@@ -155,8 +175,16 @@ class FastTrainer:
         self.eval_dataset = eval_dataset
         
         # Setup optimizer and scheduler
-        self._setup_optimizer()
-        self._setup_scheduler()
+        if kwargs.get("optimizer"):
+            self.optimizer = kwargs["optimizer"]
+        else:
+            self._setup_optimizer()
+            
+        if kwargs.get("scheduler"):
+            self.scheduler = kwargs["scheduler"]
+        else:
+            self._setup_scheduler()
+
         
         # Setup mixed precision
         self._setup_amp()
@@ -193,7 +221,22 @@ class FastTrainer:
             self.offloader = None
     
     def _setup_optimizer(self):
-        """Setup optimizer with optional layer-wise learning rates."""
+        """Setup optimizer with optional layer-wise learning rates or LISA."""
+        # Check for LISA
+        if self.config.use_lisa:
+            # LISA needs access to all params but selectively updates them
+            param_groups = [{"params": self.model.parameters()}]
+            
+            self.optimizer = LISA(
+                param_groups,
+                lr=self.config.learning_rate,
+                n_layers=self._get_num_layers(),
+                n_active_layers=self.config.lisa_active_layers,
+                interval_steps=self.config.lisa_interval,
+                weight_decay=self.config.weight_decay,
+            )
+            return
+
         # Get trainable parameters
         if self.config.use_layer_wise_lr:
             param_groups = self._get_layer_wise_params()
@@ -202,6 +245,18 @@ class FastTrainer:
                 {"params": [p for p in self.model.parameters() if p.requires_grad]}
             ]
         
+        # Check for PagedAdamW
+        if hasattr(self.config, 'use_paged_adamw') and self.config.use_paged_adamw:
+            from .optimizers import PagedAdamW
+            self.optimizer = PagedAdamW(
+                param_groups,
+                lr=self.config.learning_rate,
+                betas=(self.config.adam_beta1, self.config.adam_beta2),
+                eps=self.config.adam_epsilon,
+                weight_decay=self.config.weight_decay,
+            )
+            return
+
         # Use fused AdamW if available
         use_fused = self.device.type == 'cuda' and hasattr(torch.optim.AdamW, '_init_grouped')
         extra_args = {"fused": True} if use_fused else {}
@@ -263,6 +318,16 @@ class FastTrainer:
         
         return param_groups
     
+    def _get_num_layers(self) -> int:
+        """Estimate number of layers for LISA."""
+        # Try to guess based on config or model structure
+        if hasattr(self.model, 'config'):
+            if hasattr(self.model.config, 'num_hidden_layers'):
+                return self.model.config.num_hidden_layers
+            if hasattr(self.model.config, 'n_layer'):
+                return self.model.config.n_layer
+        return 32 # Default fallback
+    
     def _setup_scheduler(self):
         """Setup learning rate scheduler."""
         num_training_steps = self._get_num_training_steps()
@@ -283,7 +348,7 @@ class FastTrainer:
             cosine_scheduler = CosineAnnealingLR(
                 self.optimizer,
                 T_max=num_training_steps - warmup_steps,
-                eta_min=self.config.learning_rate * 0.1,
+                eta_min=self.config.learning_rate * self.config.min_lr_ratio,
             )
             self.scheduler = SequentialLR(
                 self.optimizer,
@@ -341,6 +406,9 @@ class FastTrainer:
     
     def _get_num_training_steps(self) -> int:
         """Calculate total number of training steps."""
+        if self.config.max_steps > 0:
+            return self.config.max_steps
+            
         num_samples = len(self.train_dataset)
         steps_per_epoch = math.ceil(num_samples / self.config.batch_size / self.config.gradient_accumulation_steps)
         return steps_per_epoch * self.config.epochs
@@ -407,7 +475,13 @@ class FastTrainer:
                 # Forward pass with mixed precision
                 with autocast(enabled=self.use_amp, dtype=self.amp_dtype):
                     outputs = self.model(**batch)
-                    loss = outputs.loss if hasattr(outputs, 'loss') else outputs[0]
+                    
+                    # Use Fused Cross Entropy if available, else fallback
+                    if hasattr(outputs, 'logits') and "labels" in batch:
+                        loss = fused_cross_entropy(outputs.logits, batch["labels"])
+                    else:
+                        loss = outputs.loss if hasattr(outputs, 'loss') else outputs[0]
+                        
                     loss = loss / self.config.gradient_accumulation_steps
                 
                 accumulation_loss += loss.item()
@@ -475,10 +549,17 @@ class FastTrainer:
                         if self._check_early_stopping(eval_loss):
                             print(f"\n  Early stopping triggered at step {self.global_step}")
                             break
+                    
+                    if self.config.max_steps > 0 and self.global_step >= self.config.max_steps:
+                        break
             
             # Epoch summary
             avg_epoch_loss = epoch_loss / num_batches if num_batches > 0 else 0
             print(f"\n  Epoch {epoch + 1}/{self.config.epochs} | Avg Loss: {avg_epoch_loss:.4f}")
+            
+            if self.config.max_steps > 0 and self.global_step >= self.config.max_steps:
+                break
+
         
         # Training complete
         total_time = time.time() - start_time
@@ -563,6 +644,11 @@ class FastTrainer:
         
         with open(checkpoint_dir / "config.json", 'w') as f:
             json.dump(config_dict, f, indent=2)
+            
+        # Save tokenizer
+        if self.tokenizer is not None:
+            if hasattr(self.tokenizer, 'save_pretrained'):
+                self.tokenizer.save_pretrained(checkpoint_dir)
         
         print(f"  Checkpoint saved to {checkpoint_dir}")
 
