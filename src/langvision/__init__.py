@@ -131,6 +131,31 @@ __all__ = [
     "LoRATrainer", "QLoRATrainer", "ChatModel",
 ]
 
+# GPU Detection & Auto-Config
+try:
+    from .gpu_info import get_gpu_info, auto_config, print_gpu_info, GPUInfo
+    __all__.extend(["get_gpu_info", "auto_config", "print_gpu_info", "GPUInfo"])
+except ImportError:
+    pass
+
+# FastVisionModel — Unsloth-style high-level API
+try:
+    from .fast_model import (
+        FastVisionModel,
+        LangvisionServerClient,
+        VisionRemoteJob,
+        VisionTrainingStep,
+    )
+    __all__.extend([
+        "FastVisionModel",
+        "LangvisionServerClient",
+        "VisionRemoteJob",
+        "VisionTrainingStep",
+    ])
+except ImportError as _e:
+    import warnings
+    warnings.warn(f"FastVisionModel not available: {_e}", ImportWarning, stacklevel=2)
+
 # Optional imports for advanced usage
 try:
     from .callbacks import EarlyStoppingCallback, LoggingCallback

@@ -80,3 +80,13 @@ PyPI-Recovery-Codes-Priteshraj-2025-06-09T07_26_22.599660.txt
 
 # Ignore commands.txt
 commands.txt 
+# Python build artifacts
+*.egg-info/
+dist/
+build/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment files
+.env.railway
