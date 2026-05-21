@@ -1,3 +1,9 @@
+> **Note:** `langvision` is now part of the unified [`langtrain`](https://github.com/langtrain-ai/langtrain-py) SDK.
+> `pip install langtrain[vision]` includes everything from langvision plus AdaptiveRank, DatasetIntelligence, and text LLM support.
+> langvision continues to receive updates and remains fully supported.
+
+---
+
 <div align="center">
 
 <img src="https://raw.githubusercontent.com/langtrain-ai/langvision/main/static/langvision-black.png" alt="Langvision" width="400" />
