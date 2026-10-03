@@ -24,7 +24,7 @@ class ServerTelemetryCallback(Callback):
                 headers["Authorization"] = f"Bearer {self.api_token}"
                 
             requests.post(
-                f"{self.api_url}/v1/training/jobs/{self.job_id}/telemetry",
+                f"{self.api_url}/api/v1/training/jobs/{self.job_id}/telemetry",
                 json=payload,
                 headers=headers,
                 timeout=2.0

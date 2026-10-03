@@ -47,7 +47,7 @@ class JobStatus(Enum):
 class ServerConfig:
     """Configuration for server connection."""
     base_url: str = "https://api.langtrain.xyz"
-    api_version: str = "v1"
+    api_version: str = "api/v1"
     timeout: int = 30
     max_retries: int = 3
     
@@ -179,7 +179,7 @@ class LangvisionClient:
             if self._session is None:
                 self._session = requests.Session()
                 self._session.headers.update({
-                    "Authorization": f"Bearer {self.api_key}",
+                    "X-API-Key": self.api_key,
                     "Content-Type": "application/json",
                     "User-Agent": "langvision-python/0.1.0",
                 })
@@ -272,7 +272,7 @@ class LangvisionClient:
             url = f"{url}?{urlencode(params)}"
         
         headers = {
-            "Authorization": f"Bearer {self.api_key}",
+            "X-API-Key": self.api_key,
             "Content-Type": "application/json",
             "User-Agent": "langvision-python/0.1.0",
         }
@@ -340,7 +340,7 @@ class LangvisionClient:
             return {"valid": False, "error": "No API key configured"}
         
         try:
-            response = self._request("POST", "auth/api-keys/validate", data={"api_key": self.api_key})
+            response = self._request("POST", "auth/api-keys/validate", params={"api_key": self.api_key})
             return response
         except Exception as e:
             return {"valid": False, "error": str(e)}
@@ -412,11 +412,13 @@ class LangvisionClient:
         training_config = config or {}
         training_config.update(kwargs)
         
+        # Field names follow the API server's FineTuneJobCreate schema.
         payload = {
-            "model": model,
+            "base_model": model,
             "dataset_id": dataset_id,
             "training_method": training_method,
-            "config": training_config,
+            "hyperparameters": training_config,
+            "task": "vision",
         }
         
         if sft_config and training_method == "sft":
@@ -427,17 +429,17 @@ class LangvisionClient:
         response = self._request("POST", "training/jobs", data=payload)
         
         return JobResult(
-            job_id=response["job_id"],
+            job_id=response.get("id") or response["job_id"],
             status=JobStatus(response["status"]),
             created_at=response.get("created_at"),
         )
     
     def get_job_status(self, job_id: str) -> JobResult:
         """Get current status of a job."""
-        response = self._request("GET", f"jobs/{job_id}")
+        response = self._request("GET", f"training/jobs/{job_id}")
         
         return JobResult(
-            job_id=response["job_id"],
+            job_id=response.get("id") or response["job_id"],
             status=JobStatus(response["status"]),
             result=response.get("result"),
             error=response.get("error"),
@@ -450,7 +452,7 @@ class LangvisionClient:
     def cancel_job(self, job_id: str) -> bool:
         """Cancel a running job."""
         try:
-            self._request("POST", f"jobs/{job_id}/cancel")
+            self._request("POST", f"training/jobs/{job_id}/cancel")
             return True
         except LangvisionAPIError:
             return False
@@ -521,16 +523,16 @@ class LangvisionClient:
         if status:
             params["status"] = status
         
-        response = self._request("GET", "jobs", params=params)
+        response = self._request("GET", "training/jobs", params=params)
         
         return [
             JobResult(
-                job_id=job["job_id"],
+                job_id=job.get("id") or job["job_id"],
                 status=JobStatus(job["status"]),
                 progress=job.get("progress", 0),
                 created_at=job.get("created_at"),
             )
-            for job in response.get("jobs", [])
+            for job in response.get("data", response.get("jobs", []))
         ]
     
     # ==================== Inference ====================
@@ -836,7 +838,7 @@ class LangvisionClient:
         response = self._request("POST", "evaluation/jobs", data=payload)
         
         return JobResult(
-            job_id=response["job_id"],
+            job_id=response.get("id") or response["job_id"],
             status=JobStatus(response["status"]),
         )
 
