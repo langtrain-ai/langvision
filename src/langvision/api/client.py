@@ -148,7 +148,7 @@ class LangvisionClient:
         
         if not self.api_key:
             logger.warning(
-                "No API key provided. Set LANGVISION_API_KEY environment variable "
+                "No API key provided. Set LANGTRAIN_API_KEY environment variable "
                 "or run 'langvision auth login'"
             )
         
@@ -157,7 +157,7 @@ class LangvisionClient:
     def _get_api_key(self) -> Optional[str]:
         """Get API key from environment or config file."""
         # Check environment
-        api_key = os.environ.get("LANGVISION_API_KEY")
+        api_key = os.environ.get("LANGTRAIN_API_KEY") or os.environ.get("LANGVISION_API_KEY")
         if api_key:
             return api_key
         
@@ -517,9 +517,13 @@ class LangvisionClient:
         status: Optional[str] = None,
         limit: int = 20,
         offset: int = 0,
+        organization_id: Optional[str] = None,
     ) -> List[JobResult]:
-        """List user's jobs."""
-        params = {"limit": limit, "offset": offset}
+        """List the workspace's jobs, newest first. The API needs the workspace id,
+        which is looked up from the API key when not given."""
+        if organization_id is None:
+            organization_id = self.validate().get("organization_id")
+        params = {"organization_id": organization_id, "limit": limit, "offset": offset}
         if status:
             params["status"] = status
         

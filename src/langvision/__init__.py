@@ -5,7 +5,12 @@ A research-friendly framework for building and fine-tuning Vision Large Language
 with efficient Low-Rank Adaptation (LoRA) support.
 """
 
-__version__ = "0.1.0"
+# The version CI releases (pyproject.toml), not a copy that goes stale.
+try:
+    from importlib.metadata import version as _version
+    __version__ = _version("langvision")
+except Exception:  # running from a source tree that isn't installed
+    __version__ = "0.0.0"
 __author__ = "Pritesh Raj"
 __email__ = "priteshraj10@gmail.com"
 
