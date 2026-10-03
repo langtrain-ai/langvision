@@ -15,8 +15,8 @@ from torch.utils.data import DataLoader
 # Import from langvision modules
 try:
     from langvision.models.vision_transformer import VisionTransformer
-    from langvision.utils.data import get_dataset
-    from langvision.utils.device import setup_cuda, set_seed
+    from langvision.data.datasets import get_dataset
+    from langvision.utils.setup import setup_cuda, set_seed
     from langvision.training.trainer import Trainer
 except ImportError as e:
     print(f"❌ Error importing langvision modules: {e}")

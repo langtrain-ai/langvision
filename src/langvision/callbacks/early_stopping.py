@@ -13,4 +13,8 @@ class EarlyStopping:
         else:
             self.counter += 1
             if self.counter >= self.patience:
-                self.early_stop = True 
+                self.early_stop = True
+
+
+# The name langvision.callbacks exports.
+EarlyStoppingCallback = EarlyStopping
