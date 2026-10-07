@@ -90,3 +90,6 @@ __pycache__/
 
 # Environment files
 .env.railway
+
+# JS dependencies
+node_modules/
