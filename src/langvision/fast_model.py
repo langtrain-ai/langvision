@@ -134,8 +134,9 @@ class VisionRemoteJob:
     def cancel(self) -> bool:
         return self._client.cancel_job(self.job_id)
 
-    def download(self, output_dir: str = "./model") -> str:
-        return self._client.download_model(self.job_id, output_dir)
+    def export(self, repo_id: str, private: bool = True, hf_token: Optional[str] = None) -> Dict[str, Any]:
+        """Push the finished model to a Hugging Face repo you own."""
+        return self._client.export_to_hub(self.job_id, repo_id, private=private, hf_token=hf_token)
 
     def __repr__(self) -> str:
         return f"VisionRemoteJob(id={self.job_id!r})"
@@ -147,11 +148,14 @@ class VisionRemoteJob:
 
 class LangvisionServerClient:
     """
-    Thin HTTP client for langtrain-server — vision endpoints.
-    Mirrors LangtrainServerClient from langtune with vision-specific headers.
+    Thin HTTP client for langtrain-server's training API
+    (https://api.langtrain.xyz/api/v1/training/...), authenticated with an
+    API key in the X-API-Key header. Vision runs use the same routes as text
+    runs, with task="vision".
     """
 
     DEFAULT_BASE_URL = "https://api.langtrain.xyz"
+    API_PREFIX = "/api/v1"
 
     def __init__(self, api_key: str, base_url: Optional[str] = None):
         self.api_key = api_key
@@ -162,94 +166,88 @@ class LangvisionServerClient:
         ).rstrip("/")
         self._session = None
 
+    def _url(self, path: str) -> str:
+        return f"{self.base_url}{self.API_PREFIX}{path}"
+
     def _get_session(self):
         if self._session is None:
             import requests
             s = requests.Session()
             s.headers.update({
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
+                "X-API-Key": self.api_key,
                 "X-SDK": "langvision",
             })
             self._session = s
         return self._session
 
-    def _post(self, path: str, payload: Dict) -> Dict:
-        r = self._get_session().post(f"{self.base_url}/v1{path}", json=payload, timeout=60)
+    @staticmethod
+    def _check(r) -> None:
+        if r.status_code == 401:
+            raise PermissionError("Langtrain rejected the API key (401). Create one in the dashboard under API keys.")
         r.raise_for_status()
+
+    def _post(self, path: str, payload: Dict) -> Dict:
+        r = self._get_session().post(self._url(path), json=payload, timeout=60)
+        self._check(r)
         return r.json()
 
     def _get(self, path: str, params: Dict = None) -> Any:
-        r = self._get_session().get(f"{self.base_url}/v1{path}", params=params or {}, timeout=30)
-        r.raise_for_status()
+        r = self._get_session().get(self._url(path), params=params or {}, timeout=30)
+        self._check(r)
         return r.json()
 
     def upload_dataset(self, dataset_path: str, name: str = None) -> str:
-        """Upload a local dataset file, return dataset_id."""
+        """Upload a local dataset file, return its id."""
         with open(dataset_path, "rb") as f:
             r = self._get_session().post(
-                f"{self.base_url}/v1/datasets/upload",
-                files={"file": (os.path.basename(dataset_path), f)},
-                data={"name": name or os.path.basename(dataset_path)},
+                self._url("/files"),
+                files={"file": (name or os.path.basename(dataset_path), f)},
+                params={"purpose": "fine-tune"},
                 timeout=600,
             )
-        r.raise_for_status()
+        if r.status_code in (401, 403):
+            raise PermissionError(
+                "This API key can't upload datasets. Upload the file in the Langtrain "
+                "dashboard, then pass its id as the dataset: FastVisionModel.train(model, processor, \"<dataset id>\")"
+            )
+        self._check(r)
         return r.json()["id"]
 
-    def upload_images(self, image_paths: List[str]) -> List[str]:
-        """Upload image files in batch, return list of image_ids."""
-        ids = []
-        for path in image_paths:
-            with open(path, "rb") as f:
-                r = self._get_session().post(
-                    f"{self.base_url}/v1/datasets/images/upload",
-                    files={"file": (os.path.basename(path), f)},
-                    timeout=120,
-                )
-            r.raise_for_status()
-            ids.append(r.json()["id"])
-        return ids
-
     def create_job(self, payload: Dict) -> Dict:
-        return self._post("/finetune/vision/jobs", payload)
+        return self._post("/training/jobs", payload)
 
     def get_job(self, job_id: str) -> Dict:
-        return self._get(f"/finetune/vision/jobs/{job_id}")
+        return self._get(f"/training/jobs/{job_id}")
 
     def get_telemetry(self, job_id: str, after_step: int = -1) -> List[Dict]:
+        """The latest metrics the server holds for the job, if newer than after_step."""
         try:
-            return self._get(
-                f"/finetune/vision/jobs/{job_id}/telemetry",
-                {"after_step": after_step}
-            ) or []
+            metrics = self.get_job(job_id).get("metrics") or {}
         except Exception:
             return []
+        step = metrics.get("step") or metrics.get("global_step")
+        if step is None or step <= after_step:
+            return []
+        return [{
+            "step": step,
+            "loss": metrics.get("loss", metrics.get("train_loss")),
+            "learning_rate": metrics.get("learning_rate"),
+            "epoch": metrics.get("epoch"),
+        }]
 
     def cancel_job(self, job_id: str) -> bool:
         try:
-            self._post(f"/finetune/vision/jobs/{job_id}/cancel", {})
+            self._post(f"/training/jobs/{job_id}/cancel", {})
             return True
         except Exception:
             return False
 
-    def download_model(self, job_id: str, output_dir: str) -> str:
-        import zipfile
-        os.makedirs(output_dir, exist_ok=True)
-        r = self._get_session().get(
-            f"{self.base_url}/v1/finetune/vision/jobs/{job_id}/download",
-            stream=True,
-            timeout=600,
-        )
-        r.raise_for_status()
-        zip_path = os.path.join(output_dir, "adapter.zip")
-        with open(zip_path, "wb") as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                f.write(chunk)
-        with __import__("zipfile").ZipFile(zip_path, "r") as z:
-            z.extractall(output_dir)
-        os.remove(zip_path)
-        logger.info(f"Vision model downloaded to {output_dir}")
-        return output_dir
+    def export_to_hub(self, job_id: str, repo_id: str, private: bool = True, hf_token: Optional[str] = None) -> Dict:
+        """Merge the adapter into the base model and push it to a Hugging Face repo you own."""
+        payload: Dict[str, Any] = {"repo_id": repo_id, "private": private, "merge_lora": True}
+        if hf_token:
+            payload["hf_token"] = hf_token
+        return self._post(f"/training/jobs/{job_id}/export", payload)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -450,6 +448,7 @@ class FastVisionModel:
         model_name: str,
         *,
         api_key: Optional[str] = None,
+        remote: bool = False,
         base_url: Optional[str] = None,
         load_in_4bit: bool = True,
         load_in_8bit: bool = False,
@@ -468,7 +467,9 @@ class FastVisionModel:
 
         Args:
             model_name: HuggingFace model ID (e.g. "llava-hf/llava-1.5-7b-hf")
-            api_key: langtrain-server API key. If provided, returns a remote handle.
+            api_key: Langtrain API key. If provided, returns a remote handle.
+            remote: Use the Langtrain cloud with the key in LANGTRAIN_API_KEY.
+                A key in the environment alone never switches to remote mode.
             load_in_4bit: NF4 QLoRA quantization (local mode only)
             load_in_8bit: 8-bit LLM.int8() quantization (local mode only)
             use_flash_attention_2: Enable FlashAttention2 kernel on language decoder
@@ -481,7 +482,9 @@ class FastVisionModel:
             (model, processor) — processor is AutoProcessor or AutoImageProcessor.
             In remote mode, model is a _WrappedVisionRemoteModel.
         """
-        _key = api_key or os.environ.get("LANGTRAIN_API_KEY")
+        _key = api_key or (os.environ.get("LANGTRAIN_API_KEY") if remote else None)
+        if remote and not _key:
+            raise ValueError("remote=True needs api_key= or the LANGTRAIN_API_KEY environment variable.")
         hyperparameters = {
             "max_seq_length": max_seq_length,
             "image_size": image_size,
@@ -822,12 +825,15 @@ class FastVisionModel:
             **extra,
         }
 
+        # Field names follow the API server's FineTuneJobCreate schema.
+        hyperparameters.setdefault("n_epochs", num_train_epochs)
+        hyperparameters.setdefault("batch_size", per_device_train_batch_size)
         payload = {
-            "model_id": model.model_id,
+            "base_model": model.model_id,
             "dataset_id": dataset_id,
-            "method": method,
+            "training_method": method,
             "hyperparameters": hyperparameters,
-            "modality": "vision",
+            "task": "vision",
         }
 
         response = client.create_job(payload)
@@ -841,8 +847,8 @@ class FastVisionModel:
         import tempfile
 
         if isinstance(dataset, str):
-            # Already a file path
-            return client.upload_dataset(dataset)
+            # A file path is uploaded; anything else is taken as an existing dataset id.
+            return client.upload_dataset(dataset) if os.path.isfile(dataset) else dataset
 
         # Convert HF Dataset to JSONL
         with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
@@ -926,127 +932,71 @@ class FastVisionModel:
             return FastVisionModel._train_sft(inner, processor, dataset, training_args, max_seq_length)
 
     @staticmethod
+    def _train_split(dataset: Any) -> Any:
+        return dataset if not hasattr(dataset, "get") else dataset.get("train", dataset)
+
+    @staticmethod
     def _train_sft(model, processor, dataset, training_args, max_seq_length: int):
+        from langvision._trl_compat import make_trainer
+
         TrainerCls = _make_vision_sft_trainer_cls()
-        trainer = TrainerCls(
+        trainer = make_trainer(
+            TrainerCls, processor,
             model=model,
             args=training_args,
-            train_dataset=dataset if not hasattr(dataset, "get") else dataset.get("train", dataset),
-            tokenizer=processor,
+            train_dataset=FastVisionModel._train_split(dataset),
+        )
+        trainer.train()
+        return trainer
+
+    @staticmethod
+    def _train_preference(name: str, model, processor, dataset, training_args, **config):
+        """DPO, ORPO, KTO or CPO (SimPO) with whatever TRL version is installed."""
+        from langvision._trl_compat import load_trainer, make_config, make_trainer
+
+        TrainerCls, ConfigCls = load_trainer(name)
+        args = make_config(ConfigCls, **{**training_args.to_dict(), **config})
+        trainer = make_trainer(
+            TrainerCls, processor,
+            model=model,
+            args=args,
+            train_dataset=FastVisionModel._train_split(dataset),
         )
         trainer.train()
         return trainer
 
     @staticmethod
     def _train_dpo(model, processor, dataset, training_args, beta: float):
-        try:
-            from trl import DPOTrainer, DPOConfig
-            dpo_args = DPOConfig(
-                **training_args.to_dict(),
-                beta=beta,
-            )
-            trainer = DPOTrainer(
-                model=model,
-                args=dpo_args,
-                train_dataset=dataset if not hasattr(dataset, "get") else dataset.get("train", dataset),
-                tokenizer=processor,
-            )
-        except ImportError:
-            raise ImportError("DPO training requires `trl>=0.7.0`. Install with: pip install trl")
-        trainer.train()
-        return trainer
+        return FastVisionModel._train_preference("DPO", model, processor, dataset, training_args, beta=beta)
 
     @staticmethod
     def _train_orpo(model, processor, dataset, training_args, beta: float):
-        try:
-            from trl import ORPOTrainer, ORPOConfig
-            orpo_args = ORPOConfig(
-                **training_args.to_dict(),
-                beta=beta,
-            )
-            trainer = ORPOTrainer(
-                model=model,
-                args=orpo_args,
-                train_dataset=dataset if not hasattr(dataset, "get") else dataset.get("train", dataset),
-                tokenizer=processor,
-            )
-        except ImportError:
-            raise ImportError("ORPO training requires `trl>=0.8.0`. Install with: pip install trl")
-        trainer.train()
-        return trainer
+        return FastVisionModel._train_preference("ORPO", model, processor, dataset, training_args, beta=beta)
 
     @staticmethod
     def _train_simpo(model, processor, dataset, training_args, beta: float):
-        try:
-            from trl import CPOTrainer, CPOConfig
-            simpo_args = CPOConfig(
-                **training_args.to_dict(),
-                beta=beta,
-                loss_type="simpo",
-            )
-            trainer = CPOTrainer(
-                model=model,
-                args=simpo_args,
-                train_dataset=dataset if not hasattr(dataset, "get") else dataset.get("train", dataset),
-                tokenizer=processor,
-            )
-        except ImportError:
-            raise ImportError("SimPO training requires `trl>=0.9.0`. Install with: pip install trl")
-        trainer.train()
-        return trainer
+        return FastVisionModel._train_preference(
+            "CPO", model, processor, dataset, training_args, beta=beta, loss_type="simpo"
+        )
 
     @staticmethod
     def _train_kto(model, processor, dataset, training_args, beta: float):
-        try:
-            from trl import KTOTrainer, KTOConfig
-            kto_args = KTOConfig(
-                **training_args.to_dict(),
-                beta=beta,
-            )
-            trainer = KTOTrainer(
-                model=model,
-                args=kto_args,
-                train_dataset=dataset if not hasattr(dataset, "get") else dataset.get("train", dataset),
-                tokenizer=processor,
-            )
-        except ImportError:
-            raise ImportError("KTO training requires `trl>=0.9.0`. Install with: pip install trl")
-        trainer.train()
-        return trainer
+        return FastVisionModel._train_preference("KTO", model, processor, dataset, training_args, beta=beta)
 
     @staticmethod
     def _train_rlhf(model, processor, dataset, training_args):
-        try:
-            from trl import PPOTrainer, PPOConfig, AutoModelForCausalLMWithValueHead
-            ppo_config = PPOConfig(
-                output_dir=training_args.output_dir,
-                learning_rate=training_args.learning_rate,
-                batch_size=training_args.per_device_train_batch_size,
-            )
-            policy = AutoModelForCausalLMWithValueHead.from_pretrained(model.config.name_or_path)
-            trainer = PPOTrainer(config=ppo_config, model=policy, tokenizer=processor)
-            logger.info("[Langvision] RLHF/PPO trainer initialized — implement reward loop in callback")
-        except ImportError:
-            raise ImportError("RLHF training requires `trl>=0.7.0`. Install with: pip install trl")
-        return trainer
+        # This used to build a PPO trainer and return it without training.
+        raise NotImplementedError(
+            "method='rlhf' (PPO with a reward model) isn't available for vision models. "
+            "Use method='dpo', 'orpo', 'simpo' or 'kto' to learn from preferences."
+        )
 
     @staticmethod
     def _train_grpo(model, processor, dataset, training_args):
-        try:
-            from trl import GRPOTrainer, GRPOConfig
-            grpo_config = GRPOConfig(
-                **training_args.to_dict(),
-            )
-            trainer = GRPOTrainer(
-                model=model,
-                args=grpo_config,
-                train_dataset=dataset if not hasattr(dataset, "get") else dataset.get("train", dataset),
-                tokenizer=processor,
-            )
-        except ImportError:
-            raise ImportError("GRPO training requires `trl>=0.12.0`. Install with: pip install trl")
-        trainer.train()
-        return trainer
+        # GRPO needs reward functions, which this API has no way to pass yet.
+        raise NotImplementedError(
+            "method='grpo' isn't available yet. Use method='dpo', 'orpo', 'simpo' or 'kto'."
+        )
 
     # ── generate ─────────────────────────────────────────────────────────────
 
