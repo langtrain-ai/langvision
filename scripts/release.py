@@ -38,7 +38,7 @@ def main():
     if gh_token:
         # get current remote url to extract owner/repo
         # assuming origin is https://github.com/owner/repo.git
-        run_command(f'git remote set-url origin https://{gh_token}@github.com/langtrain-ai/langvision.git')
+        run_command(f'git remote set-url origin https://{gh_token}@github.com/langtrain-ai/langtrain_langvision.git')
     
     run_command("git push")
     run_command("git push --tags")
