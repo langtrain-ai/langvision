@@ -27,12 +27,12 @@
   "author": "Langtrain AI",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^25.2.3",
+    "@types/node": "^26.6.4",
     "tsup": "^8.0.2",
-    "typescript": "^5.4.2"
+    "typescript": "^7.0.2"
   },
   "dependencies": {
-    "execa": "^8.0.1",
-    "zod": "^3.22.4"
+    "execa": "^10.1.0",
+    "zod": "^4.6.5"
   }
 }
